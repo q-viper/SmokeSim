@@ -1,0 +1,164 @@
+html,
+body {
+    position: absolute;
+    margin: 0;
+    width: 100%;
+    overflow: hidden;
+    height: 100%;
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: top;
+    padding: 2px;
+    /* height: calc(100% - 60px); */
+    /* Adjusted height to accommodate button */
+}
+
+.container div {
+    flex: 1;
+    border: 1px solid #444444;
+    background: #3B3B3B;
+    color: #CCCCCC;
+    margin: 1px;
+    height: 50%;
+    width: 33%;
+    /* Set height to 100% to fill the container */
+    position: relative;
+    /* overflow: hidden; */
+    /* Ensure content does not overflow */
+}
+
+#download-btn {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 8px;
+    position: absolute;
+    /* Position the button */
+    bottom: 20px;
+    /* Adjusted bottom position */
+    left: 50%;
+    /* Center horizontally */
+    transform: translateX(-50%);
+    /* Center horizontally */
+}
+
+#clearSmoke-btn {
+    background-color: #4CAF50;
+    border: none;
+    color: rgb(245, 98, 98);
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 8px;
+    position: absolute;
+    /* Position the button */
+    bottom: 20px;
+    /* Adjusted bottom position */
+    left: 70%;
+    /* Center horizontally */
+    transform: translateX(-50%);
+    /* Center horizontally */
+}
+
+#video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+#blended-canvas,
+#smoke-canvas {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+#frame-container img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* opacity: 0.5; */
+    pointer-events: none;
+}
+
+/* Color picker styling */
+#color-picker {
+    /* position: absolute;
+            bottom: 20px;
+            left: 20px; */
+    text-align: center;
+    z-index: 9999;
+}
+
+#color-display {
+    text-align: center;
+    /* position: absolute; */
+    color: red;
+}
+
+/* Slider styling */
+/* to make slider container horizontally stackked */
+.slider-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: top;
+    padding: 1px;
+    /* height: calc(100% - 100px); */
+
+}
+
+
+.slider-container p {
+    color: black;
+    margin: 0;
+    width: 100%;
+    text-align: left;
+    text-shadow: 1px 1px 1px #503737;
+}
+
+.slider-container div {
+    flex: 1;
+    border: 1px solid #444444;
+    background: #faf8f8;
+    color: #CCCCCC;
+    margin: 10px;
+    height: 100%;
+    width: 100%;
+    /* Set height to 100% to fill the container */
+    position: relative;
+    /* overflow: hidden; */
+    /* Ensure content does not overflow */
+}
+
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    background: #4CAF50;
+    cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+    width: 15px;
+    height: 15px;
+    background: #4CAF50;
+    cursor: pointer;
+}

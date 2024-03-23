@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet">
+    <link href="styles/style.css" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Container for Video, Smoke, and Blended Frame -->
+    <div class="container">
+        <div id="smoke-container">
+            <canvas id="smoke-canvas" width="300" height="150"></canvas>
+        </div>
+        <div id="video-container">
+            <video autoplay muted loop id="video" width="300" height="150" controls="true">
+                <source src="http://localhost:8003/media/vid.mp4" type="video/mp4">
+            </video>
+
+        </div>
+        <div id="frame-container">
+            <canvas id="blended-canvas" width="300" height="150"></canvas>
+        </div>
+    </div>
+
+
+    <!-- Color Picker -->
+
+    <div class="slider-container">
+        <div>
+            <p id='selectedMaxLife'>MaxLife:</p>
+            <input type="range" min="1000" max="10000" value="8000" class="slider" step='0.2' id="maxLife">
+            <!-- oninput="this.nextElementSibling.value = 'MaxLife: '+this.value"> -->
+        </div>
+        <div>
+            <p id='selectedMaxNumParticles'>MaxParticles:</p>
+            <input type="range" min="0" max="10" value="5" class="slider" step='0.01' id="maxNumParticles">
+        </div>
+
+
+        <div>
+            <p id='minVxDisplay'>MinVx:</p>
+            <input type="range" min="-2" max="2" value="-0.04" class="slider" step='0.01' id="minVx">
+        </div>
+        <div>
+            <p id='minVyDisplay'>MinVy:</p>
+            <input type="range" min="-1" max="1" value="-0.4" class="slider" step='0.001' id="minVy">
+        </div>
+        <div>
+            <p id='minScaleDisplay'>MinScale:</p>
+            <input type="range" min="0" max="1" value="0" class="slider" step='0.001' id="minScale">
+        </div>
+    </div>
+    <div class="slider-container">
+        <div>
+            <p id='selectedMinLife'>MinLife:</p>
+            <input type="range" min="1000" max='10000' value='2000' class="slider" step='0.2' id="minLife">
+            <!-- oninput="this.nextElementSibling.value = 'MaxLife: '+this.value"> -->
+        </div>
+
+
+        <div>
+            <p id='selectedOpacity'>Opacity:</p>
+            <input type="range" min="1" max="100" value="100" class="slider" step='0.2' id="opacity">
+        </div>
+
+        <div>
+            <p id='maxVxDisplay'>MaxVx:</p>
+            <input type="range" min="-1" max="1" value="0.04" class="slider" step='0.001' id="maxVx">
+        </div>
+
+
+        <div>
+            <p id='maxVyDisplay'>MaxVy:</p>
+            <input type="range" min="-1" max="1" value="-0.1" class="slider" step='0.001' id="maxVy">
+        </div>
+
+        <div>
+            <p id='maxScaleDisplay'>MaxScale:</p>
+            <input type="range" min="0" max="1" value="0.5" class="slider" step='0.01' id="maxScale">
+        </div>
+    </div>
+    <div class="slider-container">
+        <div>
+            <p id='spriteSizeDisplay'>SpriteSize:</p>
+            <input type="range" min="15" max="25" value="20" class="slider" step='1' id="spriteSize">
+            <!-- oninput="this.nextElementSibling.value = 'MaxLife: '+this.value"> -->
+        </div>
+        <div>
+            <input type="color" id="color-picker" value="#9e9373">
+            <p id="color-display">
+            </p>
+        </div>
+        <div class="video-url-container">
+            <p id="videoURLDisplay">Video URL:</p>
+            <input type="text" id="video-url" name="video-url" , value="http://localhost:8003/media/vid2.mp4">
+        </div>
+        <div class="change-video">
+            <button id="changeVid-btn">Change Video</button>
+        </div>
+    </div>
+
+    <!-- Download Button -->
+    <button id="download-btn">Download Images</button>
+
+    <button id="clearSmoke-btn">Clear Smoke</button>
+
+    <script src="scripts/smoke.js"></script>
+    <script src="scripts/events.js"></script>
+    <script src="scripts/processor.js"></script>
+    <script src="scripts/snapshot.js"></script>
+
+</body>
+
+</html>
