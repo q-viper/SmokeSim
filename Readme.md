@@ -1,5 +1,5 @@
 ## Somke Generation
-Just some experiments while I am learning about smoke generation and simulating things. 
+Just some experiments while I am learning about smoke generation and simulating things. Demo: [pages/index.html](pages/index.html). Just move cursor on **Right canvas to see smoke effect**.
 
 ### Disclaimer
 I am no expert in JS and this project uses modified version of following two projects:
