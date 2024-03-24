@@ -14,4 +14,8 @@ I am no expert in JS and this project uses modified version of following two pro
 3. Open http://localhost:8003/pages/index.html and see it for yourself.
 
 ### Next
-1. Trying to replicate this in Python.
+1. Trying to replicate this in Python using Matplotlib. (It was very slow failed)
+2. Try with PyGame!
+
+
+
