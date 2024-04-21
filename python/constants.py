@@ -1,3 +1,6 @@
+"""
+Module to hold constants.
+"""
 import numpy as np
 
 CLOUD_MASK = np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 

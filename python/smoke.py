@@ -15,6 +15,20 @@ class Smoke:
                  particle_count: int = 100,
                  color: Tuple[int, int, int] = (167, 167, 167), particle_args: dict = {},
                  sprite_size: int = 20, lifetime: int = -1, age: int = 0, id: int = 0):
+        """
+        Class to represent a smoke object. Smoke is made up of particles.
+
+        Args:
+        - screen (pygame.Surface): The screen to draw the smoke on.
+        - origin (Tuple[int, int], optional): The origin of the smoke. Defaults to (100, 100).
+        - particle_count (int, optional): The number of particles in the smoke. Defaults to 100.
+        - color (Tuple[int, int, int], optional): The color of the smoke. Defaults to (167, 167, 167).
+        - particle_args (dict, optional): Arguments to pass to the Particle class. Defaults to {}.
+        - sprite_size (int, optional): The size of the sprite. Defaults to 20.
+        - lifetime (int, optional): The lifetime of the smoke. Defaults to -1.
+        - age (int, optional): The age of the smoke. Defaults to 0.
+        - id (int, optional): The id of the smoke. Defaults to 0.
+        """
         self.origin = origin
         self.id = id
         self.screen = screen
@@ -28,6 +42,12 @@ class Smoke:
         self.create_particles(particle_args)
 
     def create_particles(self, particle_args: Optional[dict] = None):
+        """
+        A method to create particles for the smoke.
+
+        Args:
+        - particle_args (Optional[dict], optional): Arguments to pass to the Particle class. Defaults to None.
+        """
         particles = []
         for _ in range(self.particle_count):
             x, y = self.origin
@@ -41,6 +61,12 @@ class Smoke:
         self.particles.extend(particles)
 
     def update(self, time: float = 1):
+        """
+        A method to update the smoke.
+
+        Args:
+        - time (float, optional): The time to update the smoke by. Defaults to 1.
+        """
         self.age += time
         new_particles = []
         for particle in self.particles:
@@ -62,6 +88,16 @@ class Smoke:
 class SmokeMachine:
     def __init__(self, screen: pygame.Surface, default_particle_count: int = 100,
                  default_color: Tuple[int, int, int] = (167, 167, 167), default_sprite_size: int = 20):
+        """
+        A class to represent a smoke machine. The smoke machine creates and manages smoke objects.
+
+        Args:
+        - screen (pygame.Surface): The screen to draw the smoke on.
+        - default_particle_count (int, optional): The default number of particles in the smoke. Defaults to 100.
+        - default_color (Tuple[int, int, int], optional): The default color of the smoke. Defaults to (167, 167, 167).
+        - default_sprite_size (int, optional): The default size of the sprite. Defaults to 20.
+
+        """
         self.color = default_color
         self.sprite_size = default_sprite_size
         self.particle_count = default_particle_count
@@ -71,6 +107,13 @@ class SmokeMachine:
         self.last_smoke_id = -1
 
     def add_smoke(self, args: dict):
+        """
+        A method to add smoke to the smoke machine.
+
+        Args:
+        - args (dict): The arguments to pass to the Smoke class.
+
+        """
         if 'color' not in args:
             args['color'] = self.color
         if 'particle_count' not in args:
@@ -86,7 +129,10 @@ class SmokeMachine:
         print(
             f"Added smoke with id: {smoke.id}, particles: {len(smoke.particles)}")
 
-    def empty(self, smoke: Smoke = None):
+    def empty(self):
+        """
+        A method to empty the smoke machine.
+        """
         print('Emptying smoke')
         for s in self.smokes:
             s.age = s.lifetime
@@ -98,6 +144,12 @@ class SmokeMachine:
         self.smokes = []
 
     def update(self, time: float = 1):
+        """
+        A method to update the smoke machine.
+
+        Args:
+        - time (float, optional): The time to update the smoke machine by. Defaults to 1.
+        """
         self.time += time
         new_smokes = []
         for smoke in self.smokes:

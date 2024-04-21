@@ -1,20 +1,24 @@
-import time
-import pygame_gui
 import pygame
 import cv2
 import random
 import numpy as np
 from dataclasses import dataclass
 from constants import CLOUD_MASK
-from typing import Optional, Tuple, List
+from typing import Optional, Tuple
 
 
 def float_in_range(start, end):
+    """
+    A function to generate a random float in a given range.
+    """
     return start + random.random() * (end - start)
 
 
 @dataclass
 class Sprite:
+    """
+    A dataclass to represent a sprite.
+    """
     width: int = 20
     height: int = 20
     opacity_mask: np.ndarray = CLOUD_MASK
@@ -32,6 +36,30 @@ class Particle:
                  color: Tuple[float, float, float] = (167, 167, 167),
                  smoke_sprite_size: int = 20, fade_speed: int = 1
                  ):
+        """
+        A class to represent a particle. Particles are used to create smoke.
+
+        Args:
+        - x (int): The x coordinate of the particle.
+        - y (int): The y coordinate of the particle.
+        - vx (Optional[float], optional): The x velocity of the particle. Defaults to None.
+        - startvy (Optional[float], optional): The y velocity of the particle. Defaults to None.
+        - scale (Optional[float], optional): The scale of the particle. Defaults to None.
+        - lifetime (Optional[int], optional): The lifetime of the particle. Defaults to None.
+        - age (int, optional): The age of the particle. Defaults to 0.
+        - min_vx (float, optional): The minimum x velocity of the particle. Defaults to -4/100.
+        - max_vx (float, optional): The maximum x velocity of the particle. Defaults to 4/100.
+        - min_vy (float, optional): The minimum y velocity of the particle. Defaults to -4/10.
+        - max_vy (float, optional): The maximum y velocity of the particle. Defaults to -1/10.
+        - min_scale (int, optional): The minimum scale of the particle. Defaults to 20.
+        - max_scale (int, optional): The maximum scale of the particle. Defaults to 40.
+        - min_lifetime (float, optional): The minimum lifetime of the particle. Defaults to 2000.
+        - max_lifetime (float, optional): The maximum lifetime of the particle. Defaults to 8000.
+        - color (Tuple[float, float, float], optional): The color of the particle. Defaults to (167, 167, 167).
+        - smoke_sprite_size (int, optional): The size of the sprite. Defaults to 20.
+        - fade_speed (int, optional): The speed at which the particle fades. Defaults to 1.
+
+        """
         self.x = x
         self.y = y
         self.vx = vx if vx is not None else float_in_range(min_vx, max_vx)
@@ -55,6 +83,15 @@ class Particle:
         self.sprite_paint = self.make_sprite()
 
     def paint_sprite(self, sprite: Sprite) -> pygame.Surface:
+        """
+        A method to paint a sprite.
+
+        Args:
+        - sprite (Sprite): The sprite to paint.
+
+        Returns:
+        - pygame.Surface: The painted sprite.
+        """
         surface = pygame.Surface(
             (sprite.width, sprite.height), pygame.SRCALPHA)
         pixels = pygame.PixelArray(surface)
@@ -71,13 +108,26 @@ class Particle:
         self.surface = surface
         return surface
 
-    def make_sprite(self):
+    def make_sprite(self) -> pygame.Surface:
+        """
+        A method to make a sprite.
+
+        Returns:
+        - pygame.Surface: The sprite.
+        """
         self.sprite = Sprite(
             color=self.color, width=self.smoke_sprite_size, height=self.smoke_sprite_size)
         self.sprite_paint = self.paint_sprite(self.sprite)
         return self.sprite_paint
 
     def update(self, time: float = 1):
+        """
+        A method to update the particle.
+
+        Args:
+        - time (float, optional): The time to update the particle by. Defaults to 1.
+
+        """
         self.age += time
         self.x += self.vx * time
         self.y += self.vy * time
@@ -101,6 +151,12 @@ class Particle:
             pass
 
     def draw(self, screen):
+        """
+        A method to draw the particle.
+
+        Args:
+        - screen (pygame.Surface): The screen to draw the particle on.
+        """
         self.sprite_paint.set_alpha(self.alpha)
         screen.blit(self.sprite_paint, (int(self.x), int(self.y)))
 
