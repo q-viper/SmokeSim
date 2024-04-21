@@ -224,9 +224,13 @@ def main():
                 print("Mouse position:", mouse_pos)
                 smoke_machine.add_smoke(dict(color=smoke_machine.color, particle_count=1,
                                              origin=mouse_pos, lifetime=200,
-                                             particle_args={'lifetime': 100,
+                                             particle_args={'min_lifetime': 200,
+                                                            'max_lifetime': 500,
+                                                            'min_scale': 10,
+                                                            'max_scale': 50,
                                                             'fade_speed': 50,
                                                             'scale': 50,
+                                                            'smoke_sprite_size': 50,
                                                             'color': smoke_machine.color}))
         prev_mouse_pos = mouse_pos
         # Clear the screen
