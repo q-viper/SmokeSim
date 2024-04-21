@@ -1,73 +1,110 @@
-from dataclasses import dataclass, field
-from typing import Callable, List, Optional
+import time
+import pygame_gui
+import pygame
+import cv2
+import random
 import numpy as np
+from dataclasses import dataclass
+from constants import CLOUD_MASK
+from typing import Optional, Tuple, List
+
+
+def float_in_range(start, end):
+    return start + random.random() * (end - start)
+
 
 @dataclass
+class Sprite:
+    width: int = 20
+    height: int = 20
+    opacity_mask: np.ndarray = CLOUD_MASK
+    color: tuple = (255, 255, 255)
+
+
 class Particle:
-    x: int = 100
-    y: int = 100
-    z: int = 1
-    x_update: Optional[Callable] = field(default=lambda x, t: x +t)
-    y_update: Optional[Callable] = field(default=lambda x, t: x * np.cos((x+t)*np.pi/180))
-    z_update: Optional[Callable] = field(default=lambda x, t: x-t/(x+2))
-    lifespan: int = 100
-    color: List[int] = field(default_factory=lambda: [200, 200, 200])
-    color_update: Optional[List[Callable]] = field(default_factory=lambda: [lambda x, t: min(max(0, x - t), 255)])
-    num_subparticles: Optional[int] = 2
-    subparticles_every: Optional[int] = 2
-    _time: int = 0
-    _current_color: List[int] = field(init=False, default_factory=lambda: [200, 200, 200])
-    _position: List[int] = field(init=False, default_factory=lambda: [100, 100, 2])
-    is_alive: bool = True
+    def __init__(self, x: int, y: int, vx: Optional[float] = None,
+                 startvy: Optional[float] = None, scale: Optional[float] = None,
+                 lifetime: Optional[int] = None, age: int = 0,
+                 min_vx: float = -4/100, max_vx: float = 4/100,
+                 min_vy: float = -4/10, max_vy: float = -1/10,
+                 min_scale: int = 20, max_scale: int = 40,
+                 min_lifetime: float = 2000, max_lifetime: float = 8000,
+                 color: Tuple[float, float, float] = (167, 167, 167),
+                 smoke_sprite_size: int = 20, fade_speed: int = 1
+                 ):
+        self.x = x
+        self.y = y
+        self.vx = vx if vx is not None else float_in_range(min_vx, max_vx)
+        self.startvy = startvy if startvy is not None else float_in_range(
+            min_vy, max_vy)
+        self.scale = smoke_sprite_size if scale is not None else float_in_range(
+            min_scale, max_scale)
+        self.lifetime = lifetime if lifetime is not None else float_in_range(
+            min_lifetime, max_lifetime)
+        self.age = age
+        self.color = color
+        self.smoke_sprite_size = smoke_sprite_size
+        self.final_scale = float_in_range(self.scale * 0.1,
+                                          self.scale*1.5)
+        self.scale_step = (self.final_scale - self.scale) / self.lifetime
 
-    def update_position(self, time: float):
-        x = self.x if self.x_update is None else self.x_update(self.x, time)
-        y = self.y if self.y_update is None else self.y_update(self.y, time)
-        z = self.z if self.z_update is None else self.z_update(self.z, time)
+        self.vy = self.startvy
+        self.alpha = 255
+        self.fade_speed = fade_speed
+        self.is_alive = True
+        self.sprite_paint = self.make_sprite()
 
-        return [x, y, z]
+    def paint_sprite(self, sprite: Sprite) -> pygame.Surface:
+        surface = pygame.Surface(
+            (sprite.width, sprite.height), pygame.SRCALPHA)
+        pixels = pygame.PixelArray(surface)
+        opacities = cv2.resize(
+            sprite.opacity_mask, (sprite.width, sprite.height), interpolation=cv2.INTER_NEAREST)
+        for x in range(sprite.width):
+            for y in range(sprite.height):
+                pixels[x, y] = (*sprite.color, opacities[x, y])
+        del pixels
+        surface = pygame.transform.smoothscale(
+            surface, (sprite.width // 2, sprite.height // 2))
+        surface = pygame.transform.smoothscale(
+            surface, (sprite.width, sprite.height))
+        self.surface = surface
+        return surface
 
-    def update_color(self, time: float):
-        color = self.color
-        if self.color_update is None:
-            pass
-        elif len(self.color_update) == 1:
-            fxn = self.color_update[0]
-            color = [fxn(c, time) for c in color]
-        else:
-            color = [upd(c, time) for upd, c in zip(self.color_update, color)]
-        return [int(c) for c in color]
+    def make_sprite(self):
+        self.sprite = Sprite(
+            color=self.color, width=self.smoke_sprite_size, height=self.smoke_sprite_size)
+        self.sprite_paint = self.paint_sprite(self.sprite)
+        return self.sprite_paint
 
-    def update(self):
-        
-        sub_particles = []
-        if self._time <= self.lifespan:
-            self._position = self.update_position(self._time)
-            self._current_color = self.update_color(self._time)
-            sub_particles = [self]
-            if self._time % self.subparticles_every == 0:
-                if self.num_subparticles is not None:
-                    for p in range(self.num_subparticles):
-                        p = Particle(
-                            self._position[0],
-                            self._position[1],
-                            self._position[2],
-                            self.x_update,
-                            self.y_update,
-                            self.z_update,
-                            self.lifespan,
-                            self._current_color,
-                            self.color_update,
-                            self.num_subparticles,
-                            self.subparticles_every,
-                        )
-                        sub_particles.append(p)
-        else:
+    def update(self, time: float = 1):
+        self.age += time
+        self.x += self.vx * time
+        self.y += self.vy * time
+        frac = (self.age / self.lifetime) ** 0.5
+        self.vy = (1 - frac) * self.startvy
+        self.scale += time * self.scale_step
+        self.alpha -= self.fade_speed
+        if self.alpha < 0 or self.age > self.lifetime or self.scale < 1:
             self.is_alive = False
-        self._time += 1
-        return sub_particles
+        if self.scale > 1:
+            self.sprite.width = int(self.scale)
+            self.sprite.height = int(self.scale)
+            if self.sprite.width < 1 or self.sprite.height < 1:
+                self.is_alive = False
 
-# Example usage:
-particle = Particle()
-particle.update()
-print(particle)
+            surface = pygame.transform.smoothscale(
+                self.surface, (self.sprite.width // 2, self.sprite.height // 2))
+            surface = pygame.transform.smoothscale(
+                self.surface, (self.sprite.width, self.sprite.height))
+            self.sprite_paint = surface
+            pass
+
+    def draw(self, screen):
+        self.sprite_paint.set_alpha(self.alpha)
+        screen.blit(self.sprite_paint, (int(self.x), int(self.y)))
+
+    def __del__(self):
+        del self.sprite_paint
+        del self.sprite
+        del self.surface
