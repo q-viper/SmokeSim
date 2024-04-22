@@ -1,5 +1,5 @@
 # Smoke Generation
-Just some experiments while I am learning about smoke generation and simulating things. Demo: [pages/index.html](pages/index.html). Just move cursor on **Right canvas to see smoke effect**. Video might not play on demo server. But smoke does :)
+Just some experiments while I am learning about smoke generation and simulating things. Demo: [pages/index.html](https://q-viper.github.io/SmokeSim/pages/index.html). Just move cursor on **Right canvas to see smoke effect**. Video might not play on demo server. But smoke does :)
 
 ## Disclaimer
 I am no expert in JS and this project uses modified version of following two projects:
