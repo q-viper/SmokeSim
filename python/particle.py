@@ -7,7 +7,7 @@ from constants import CLOUD_MASK
 from typing import Optional, Tuple
 
 
-def float_in_range(start, end):
+def float_in_range(start:float, end:float)->float:
     """
     A function to generate a random float in a given range.
     """
