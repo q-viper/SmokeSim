@@ -7,7 +7,7 @@ from constants import CLOUD_MASK
 from typing import Optional, Tuple
 
 
-def float_in_range(start:float, end:float)->float:
+def float_in_range(start: float, end: float) -> float:
     """
     A function to generate a random float in a given range.
     """
@@ -25,60 +25,97 @@ class Sprite:
     color: tuple = (255, 255, 255)
 
 
+@dataclass
+class ParticleProperty:
+    """
+    A dataclass to represent the arguments for a particle.
+
+
+    - vx (Optional[float], optional): The x velocity of the particle. Defaults to None.
+    - startvy (Optional[float], optional): The y velocity of the particle. Defaults to None.
+    - scale (Optional[float], optional): The scale of the particle. Defaults to None.
+    - lifetime (Optional[int], optional): The lifetime of the particle. Defaults to None.
+    - age (int, optional): The age of the particle. Defaults to 0.
+    - min_vx (float, optional): The minimum x velocity of the particle. Defaults to -4/100.
+    - max_vx (float, optional): The maximum x velocity of the particle. Defaults to 4/100.
+    - min_vy (float, optional): The minimum y velocity of the particle. Defaults to -4/10.
+    - max_vy (float, optional): The maximum y velocity of the particle. Defaults to -1/10.
+    - min_scale (int, optional): The minimum scale of the particle. Defaults to 20.
+    - max_scale (int, optional): The maximum scale of the particle. Defaults to 40.
+    - min_lifetime (float, optional): The minimum lifetime of the particle. Defaults to 2000.
+    - max_lifetime (float, optional): The maximum lifetime of the particle. Defaults to 8000.
+    - color (Tuple[float, float, float], optional): The color of the particle. Defaults to (167, 167, 167).
+    - smoke_sprite_size (int, optional): The size of the sprite. Defaults to 20.
+    - fade_speed (int, optional): The speed at which the particle fades. Defaults to 1.
+    - alpha (int, optional): The alpha of the particle. Defaults to 255.
+    """
+    vx: Optional[float] = None
+    startvy: Optional[float] = None
+    scale: Optional[float] = None
+    lifetime: Optional[int] = None
+    age: int = 0
+    min_vx: float = -4/100
+    max_vx: float = 4/100
+    min_vy: float = -4/10
+    max_vy: float = -1/10
+    min_scale: int = 20
+    max_scale: int = 40
+    min_lifetime: float = 2000
+    max_lifetime: float = 8000
+    color: Tuple[float, float, float] = (24, 46, 48)
+    smoke_sprite_size: int = 20
+    fade_speed: int = 1
+    alpha: int = 255
+
+
 class Particle:
-    def __init__(self, x: int, y: int, vx: Optional[float] = None,
-                 startvy: Optional[float] = None, scale: Optional[float] = None,
-                 lifetime: Optional[int] = None, age: int = 0,
-                 min_vx: float = -4/100, max_vx: float = 4/100,
-                 min_vy: float = -4/10, max_vy: float = -1/10,
-                 min_scale: int = 20, max_scale: int = 40,
-                 min_lifetime: float = 2000, max_lifetime: float = 8000,
-                 color: Tuple[float, float, float] = (167, 167, 167),
-                 smoke_sprite_size: int = 20, fade_speed: int = 1
+    def __init__(self, x: int, y: int, property: ParticleProperty
                  ):
         """
         A class to represent a particle. Particles are used to create smoke.
 
         Args:
-        - x (int): The x coordinate of the particle.
+         - x (int): The x coordinate of the particle.
         - y (int): The y coordinate of the particle.
-        - vx (Optional[float], optional): The x velocity of the particle. Defaults to None.
-        - startvy (Optional[float], optional): The y velocity of the particle. Defaults to None.
-        - scale (Optional[float], optional): The scale of the particle. Defaults to None.
-        - lifetime (Optional[int], optional): The lifetime of the particle. Defaults to None.
-        - age (int, optional): The age of the particle. Defaults to 0.
-        - min_vx (float, optional): The minimum x velocity of the particle. Defaults to -4/100.
-        - max_vx (float, optional): The maximum x velocity of the particle. Defaults to 4/100.
-        - min_vy (float, optional): The minimum y velocity of the particle. Defaults to -4/10.
-        - max_vy (float, optional): The maximum y velocity of the particle. Defaults to -1/10.
-        - min_scale (int, optional): The minimum scale of the particle. Defaults to 20.
-        - max_scale (int, optional): The maximum scale of the particle. Defaults to 40.
-        - min_lifetime (float, optional): The minimum lifetime of the particle. Defaults to 2000.
-        - max_lifetime (float, optional): The maximum lifetime of the particle. Defaults to 8000.
-        - color (Tuple[float, float, float], optional): The color of the particle. Defaults to (167, 167, 167).
-        - smoke_sprite_size (int, optional): The size of the sprite. Defaults to 20.
-        - fade_speed (int, optional): The speed at which the particle fades. Defaults to 1.
-
+        - property (ParticleProperty): The properties of the particle.
+            - vx (Optional[float], optional): The x velocity of the particle. Defaults to None.
+            - startvy (Optional[float], optional): The y velocity of the particle. Defaults to None.
+            - scale (Optional[float], optional): The scale of the particle. Defaults to None.
+            - lifetime (Optional[int], optional): The lifetime of the particle. Defaults to None.
+            - age (int, optional): The age of the particle. Defaults to 0.
+            - min_vx (float, optional): The minimum x velocity of the particle. Defaults to -4/100.
+            - max_vx (float, optional): The maximum x velocity of the particle. Defaults to 4/100.
+            - min_vy (float, optional): The minimum y velocity of the particle. Defaults to -4/10.
+            - max_vy (float, optional): The maximum y velocity of the particle. Defaults to -1/10.
+            - min_scale (int, optional): The minimum scale of the particle. Defaults to 20.
+            - max_scale (int, optional): The maximum scale of the particle. Defaults to 40.
+            - min_lifetime (float, optional): The minimum lifetime of the particle. Defaults to 2000.
+            - max_lifetime (float, optional): The maximum lifetime of the particle. Defaults to 8000.
+            - color (Tuple[float, float, float], optional): The color of the particle. Defaults to (167, 167, 167).
+            - smoke_sprite_size (int, optional): The size of the sprite. Defaults to 20.
+            - fade_speed (int, optional): The speed at which the particle fades. Defaults to 1.
+            - alpha (int, optional): The alpha of the particle. Defaults to 255.
         """
+        self.property = property
         self.x = x
         self.y = y
-        self.vx = vx if vx is not None else float_in_range(min_vx, max_vx)
-        self.startvy = startvy if startvy is not None else float_in_range(
-            min_vy, max_vy)
-        self.scale = smoke_sprite_size if scale is not None else float_in_range(
-            min_scale, max_scale)
-        self.lifetime = lifetime if lifetime is not None else float_in_range(
-            min_lifetime, max_lifetime)
-        self.age = age
-        self.color = color
-        self.smoke_sprite_size = smoke_sprite_size
+        self.vx = property.vx if property.vx is not None else float_in_range(
+            property.min_vx, property.max_vx)
+        self.startvy = property.startvy if property.startvy is not None else float_in_range(
+            property.min_vy, property.max_vy)
+        self.scale = property.smoke_sprite_size if property.scale is not None else float_in_range(
+            property.min_scale, property.max_scale)
+        self.lifetime = property.lifetime if property.lifetime is not None else float_in_range(
+            property.min_lifetime, property.max_lifetime)
+        self.age = property.age
+        self.color = property.color
+        self.smoke_sprite_size = property.smoke_sprite_size
         self.final_scale = float_in_range(self.scale * 0.1,
                                           self.scale*1.5)
         self.scale_step = (self.final_scale - self.scale) / self.lifetime
-
         self.vy = self.startvy
-        self.alpha = 255
-        self.fade_speed = fade_speed
+        self.alpha = property.alpha
+        self.fade_speed = property.fade_speed
         self.is_alive = True
         self.sprite_paint = self.make_sprite()
 

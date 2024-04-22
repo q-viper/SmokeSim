@@ -7,55 +7,72 @@ import numpy as np
 from dataclasses import dataclass
 from constants import CLOUD_MASK
 from typing import Optional, Tuple, List
-from particle import Particle
+from particle import Particle, ParticleProperty
+
+
+@dataclass
+class SmokeProperty:
+    """
+    A dataclass to represent the arguments for a smoke.
+
+    - origin (Tuple[int, int], optional): The origin of the smoke. Defaults to (100, 100).
+    - particle_count (int, optional): The number of particles in the smoke. Defaults to 100.
+    - color (Tuple[int, int, int], optional): The color of the smoke. Defaults to (167, 167, 167).
+    - particle_args (dict, optional): Arguments to pass to the Particle class. Defaults to {}.
+    - sprite_size (int, optional): The size of the sprite. Defaults to 20.
+    - lifetime (int, optional): The lifetime of the smoke. Defaults to -1.
+    - age (int, optional): The age of the smoke. Defaults to 0.
+    - id (int, optional): The id of the smoke. Defaults to 0.
+    """
+    origin: Tuple[int, int] = (100, 100)
+    particle_count: int = 100
+    color: Tuple[int, int, int] = (24, 46, 48)
+    particle_property: Optional[ParticleProperty] = ParticleProperty()
+    sprite_size: int = 20
+    lifetime: int = -1
+    age: int = 0
+    id: int = 0
 
 
 class Smoke:
-    def __init__(self, screen: pygame.Surface, origin: Tuple[int, int] = (100, 100),
-                 particle_count: int = 100,
-                 color: Tuple[int, int, int] = (167, 167, 167), particle_args: dict = {},
-                 sprite_size: int = 20, lifetime: int = -1, age: int = 0, id: int = 0):
+    def __init__(self, screen: pygame.Surface, smoke_property: SmokeProperty):
         """
         Class to represent a smoke object. Smoke is made up of particles.
 
         Args:
         - screen (pygame.Surface): The screen to draw the smoke on.
-        - origin (Tuple[int, int], optional): The origin of the smoke. Defaults to (100, 100).
-        - particle_count (int, optional): The number of particles in the smoke. Defaults to 100.
-        - color (Tuple[int, int, int], optional): The color of the smoke. Defaults to (167, 167, 167).
-        - particle_args (dict, optional): Arguments to pass to the Particle class. Defaults to {}.
-        - sprite_size (int, optional): The size of the sprite. Defaults to 20.
-        - lifetime (int, optional): The lifetime of the smoke. Defaults to -1.
-        - age (int, optional): The age of the smoke. Defaults to 0.
-        - id (int, optional): The id of the smoke. Defaults to 0.
-        """
-        self.origin = origin
-        self.id = id
-        self.screen = screen
-        self.particle_count = particle_count
-        self.color = color
-        self.sprite_size = sprite_size
-        self.lifetime = lifetime
-        self.age = age
-        self.particles = []
-        self.particle_args = particle_args
-        self.create_particles(particle_args)
+        - smoke_property (SmokeProperty): The properties of the smoke.
 
-    def create_particles(self, particle_args: Optional[dict] = None):
+        """
+        self.origin = smoke_property.origin
+        self.id = smoke_property.id
+        self.screen = screen
+        self.particle_count = smoke_property.particle_count
+        self.color = smoke_property.color
+        self.sprite_size = smoke_property.sprite_size
+        self.lifetime = smoke_property.lifetime
+        self.age = smoke_property.age
+        self.particles = []
+        self.particle_property = smoke_property.particle_property
+        self.create_particles(self.particle_property)
+
+    def create_particles(self, particle_property: Optional[ParticleProperty] = None):
         """
         A method to create particles for the smoke.
 
         Args:
-        - particle_args (Optional[dict], optional): Arguments to pass to the Particle class. Defaults to None.
+        - particle_property (Optional[ParticleProperty], optional): The properties of the particles. Defaults to None.
         """
         particles = []
         for _ in range(self.particle_count):
             x, y = self.origin
-            if particle_args:
-                particle = Particle(x, y, **particle_args)
+            if particle_property:
+
+                particle = Particle(x, y, particle_property)
             else:
-                particle = Particle(x, y, color=self.color,
-                                    smoke_sprite_size=self.sprite_size)
+                particle_property = ParticleProperty(color=self.color,
+                                                     smoke_sprite_size=self.sprite_size)
+                particle = Particle(x, y, particle_property)
 
             particles.append(particle)
         self.particles.extend(particles)
@@ -81,13 +98,13 @@ class Smoke:
                 del p
             self.particles = []
         else:
-            self.create_particles(self.particle_args)
-        print(f"ID: {self.id}, Num particles: {len(self.particles)}")
+            self.create_particles(self.particle_property)
+        # print(f"ID: {self.id}, Num particles: {len(self.particles)}")
 
 
 class SmokeMachine:
     def __init__(self, screen: pygame.Surface, default_particle_count: int = 100,
-                 default_color: Tuple[int, int, int] = (167, 167, 167), default_sprite_size: int = 20):
+                 default_color: Tuple[int, int, int] = (24, 46, 48), default_sprite_size: int = 20):
         """
         A class to represent a smoke machine. The smoke machine creates and manages smoke objects.
 
@@ -114,6 +131,7 @@ class SmokeMachine:
         - args (dict): The arguments to pass to the Smoke class.
 
         """
+
         if 'color' not in args:
             args['color'] = self.color
         if 'particle_count' not in args:
@@ -122,8 +140,14 @@ class SmokeMachine:
             args['sprite_size'] = self.sprite_size
         if 'id' not in args:
             args['id'] = self.last_smoke_id+1
+        if 'particle_args' in args:
+            particle_args = args['particle_args']
+            particle_property = ParticleProperty(**particle_args)
+            args['particle_property'] = particle_property
+            del args['particle_args']
+        smoke_property = SmokeProperty(**args)
         smoke = Smoke(self.screen,
-                      **args)
+                      smoke_property)
         self.smokes.append(smoke)
         self.last_smoke_id += 1
         print(

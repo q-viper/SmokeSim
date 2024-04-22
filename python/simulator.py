@@ -5,12 +5,16 @@ from smoke import SmokeMachine
 
 def main():
     pygame.init()
+    pygame.display.set_caption("Smoke Simulator")
+    bg = pygame.image.load("assets/me.jpg")
     WIDTH, HEIGHT = 700, 500
     container_wh = (WIDTH, 150)
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
+    bg = pygame.transform.scale(bg, (WIDTH, HEIGHT))
+    screen.blit(bg, (0, 0))
     # ui_screen = pygame.display.set_mode((WIDTH, 100))
     manager = pygame_gui.UIManager((WIDTH, 200))
-    color = (0, 255, 255)
+    color = (24, 46, 48)
     # Create a container for sliders, labels, and button
     container = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0, 0), container_wh),
                                             manager=manager)
@@ -120,7 +124,9 @@ def main():
                                  origin=(WIDTH // 2, HEIGHT)))
     particle_args = {}
     prev_mouse_pos = None
+    steps = 0
     while running:
+        steps += 1
         for event in pygame.event.get():
 
             if event.type == pygame.QUIT:
@@ -152,6 +158,7 @@ def main():
                     pygame.image.save(smoke_subsurface, f"smoke.png")
                 if event.ui_element == clear_button:
                     smoke_machine.empty()
+                    steps = 0
 
             elif event.type == pygame_gui.UI_HORIZONTAL_SLIDER_MOVED:
                 smoke_machine.color = (int(red_color_slider.get_current_value()),
@@ -174,11 +181,11 @@ def main():
                 smoke_machine.particle_count = max_particles_slider.get_current_value()
 
                 red_label.text = f"R: {smoke_machine.color[0]}"
-                red_label.text_colour = [smoke_machine.color[0], 0, 0]
+                # red_label.text_colour = [smoke_machine.color[0], 0, 0]
                 green_label.text = f"G: {smoke_machine.color[1]}"
-                green_label.text_colour = [0, smoke_machine.color[1], 0]
+                # green_label.text_colour = [0, smoke_machine.color[1], 0]
                 blue_label.text = f"B: {smoke_machine.color[2]}"
-                blue_label.text_colour = [0, 0, smoke_machine.color[2]]
+                # blue_label.text_colour = [0, 0, smoke_machine.color[2]]
 
                 max_particles_label.text = f"MaxParticles: {smoke_machine.particle_count}"
                 max_life_label.text = f"MaxLife: {particle_args['max_lifetime']}"
@@ -226,7 +233,8 @@ def main():
                                                             'color': smoke_machine.color}))
         prev_mouse_pos = mouse_pos
         # Clear the screen
-        screen.fill((0, 0, 0))
+        # screen.fill((0, 0, 0))
+        screen.blit(bg, (0, 0))
         for s in smoke_machine.smokes:
             print(f"Smoke id: {s.id}")
             print(f"Num particles: {len(s.particles)}")
@@ -239,6 +247,7 @@ def main():
         pygame.display.flip()
 
     pygame.quit()
+    print(f"Ran for {steps} iterations")
 
 
 main()
