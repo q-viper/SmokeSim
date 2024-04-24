@@ -119,6 +119,6 @@ if __name__ == "__main__":
                                                    'scale': 50,
                                                    'smoke_sprite_size': 50,
                                                    'color': smoke_machine.color}))
-    augmentation.agument(10)
+    augmentation.agument(1)
     augmentation.save_as()
     augmentation.end()
