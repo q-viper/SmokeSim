@@ -38,6 +38,7 @@ I am no expert in JS and this project uses modified version of following two pro
 
 ```python
 from augmentation import Augmentation
+import numpy as np
 
 np.random.seed(100)
 WIDTH, HEIGHT = 700, 500
