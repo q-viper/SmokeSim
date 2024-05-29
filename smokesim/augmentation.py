@@ -88,14 +88,19 @@ class Augmentation:
 
         Args:
         - steps (int): The number of steps to augment the image.
+        - image (Optional[np.ndarray]): The image to augment.
+        - history_path (Path): The path to save the history.
+
+        Yields:
+        - np.ndarray: The augmented image.
         """
         if image is not None:
             self.image = pygame.surfarray.make_surface(image)
             self.image = pygame.transform.scale(self.image, self.screen_dim)
         
-        writer = None
+        self.writer = None
         if history_path:
-            writer = cv2.VideoWriter(
+            self.writer = cv2.VideoWriter(
                 str(history_path),
                 cv2.VideoWriter_fourcc(*"mp4v"),
                 30,
@@ -104,30 +109,45 @@ class Augmentation:
         for t in range(steps):
             self.screen.blit(self.image, (0, 0))
             self.smoke_machine.update(time=t)
-            self.clock.tick(30)
+            # self.clock.tick(30)
 
             pygame.display.flip()
             rgb_array = pygame.surfarray.array3d(pygame.display.get_surface())
-            if writer:
-                writer.write(cv2.cvtColor(cv2.rotate(rgb_array, cv2.ROTATE_90_CLOCKWISE), cv2.COLOR_RGB2BGR))
+            if self.writer:
+                self.writer.write(cv2.cvtColor(cv2.rotate(rgb_array, cv2.ROTATE_90_CLOCKWISE), cv2.COLOR_RGB2BGR))
             yield cv2.rotate(rgb_array, cv2.ROTATE_90_CLOCKWISE)
 
     def augment(self, steps: int = 2, image: Optional[np.ndarray] = None, 
-                history_path:Optional[Path]=None) -> np.ndarray:
+                history_path:Optional[Path]=None, jump:bool=False) -> np.ndarray:
         """
         A method to augment the image with smoke.
 
         Args:
-        - steps (int): The number of steps to augment the image.
+        ----------------
+        - steps (int, optional): The number of steps to augment the image. Defaults to 2.
+        - image (Optional[np.ndarray], optional): The image to augment. Defaults to None.
+        - jump (bool, optional): A flag to jump to the final image. Defaults to False.
+        
+        Returns:
+        ----------------
+        - np.ndarray: The augmented image.
         """
         if image is not None:
             self.image = pygame.surfarray.make_surface(image)
             self.image = pygame.transform.scale(self.image, self.screen_dim)
-
+        if jump:
+            self.screen.blit(self.image, (0, 0))
+            self.smoke_machine.update(time=steps)
+            pygame.display.flip()
+            rgb_array = pygame.surfarray.array3d(pygame.display.get_surface())
+            return cv2.rotate(rgb_array, cv2.ROTATE_90_CLOCKWISE)
         for rgb_array in self.augment_iter(steps, image, history_path=history_path):
-            pass    
+            pass
+        if self.writer:
+            self.writer.release()
         return rgb_array
 
+    
         
 
     def save_as(self, out_dir: Path = Path("assets/augmented_smoke.png")):

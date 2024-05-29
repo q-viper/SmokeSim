@@ -11,7 +11,7 @@ if __name__ == "__main__":
     augmentation.add_smoke(dict(particle_count=15, sprite_size=25, origin=(250, 500)))
     augmentation.add_smoke(dict(particle_count=15, sprite_size=25, origin=(450, 500)))
 
-    augmentation.augment(steps=90,history_path=Path('media/smoke_history.mp4'))
+    final_image = augmentation.augment(steps=90, history_path=Path('media/smoke_history.mp4'))
     for i in range(5):
         augmentation.add_smoke(
             dict(
@@ -31,6 +31,6 @@ if __name__ == "__main__":
                 },
             )
         )
-    augmentation.augment(steps=1)
+    final_image = augmentation.augment(steps=1)
     augmentation.save_as('assets/augmented_smoke_image.jpg')
     augmentation.end()

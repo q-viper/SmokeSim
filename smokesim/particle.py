@@ -185,7 +185,7 @@ class Particle:
             surface = pygame.transform.smoothscale(
                 self.surface, (self.sprite.width, self.sprite.height))
             self.sprite_paint = surface
-            pass
+            
 
     def draw(self, screen):
         """

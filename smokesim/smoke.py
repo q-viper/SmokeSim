@@ -47,7 +47,7 @@ class Smoke:
         self.sprite_size = smoke_property.sprite_size
         self.lifetime = smoke_property.lifetime
         self.age = smoke_property.age
-        self.particles = []
+        self.particles: List[Particle] = []
         self.particle_property = smoke_property.particle_property
         self.create_particles(self.particle_property)
 
