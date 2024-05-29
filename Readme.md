@@ -76,11 +76,11 @@ if __name__ == "__main__":
 
 ```
 * Now `augment` method also accepts image where we want to put smoke. It should be NumPy array. And returns same image after augmenting it. And we can store the smoke history as well. 
-* A sample can be seen at [media/smoke_history.mp4](media/smoke_history.mp4).
+* A sample can be seen at [media/smoke_history.mp4](https://q-viper.github.io/SmokeSim/media/smoke_history.mp4).
 
 ## Using this With Video
 * [`smokesim/examples/video_augmentation.py`](smokesim/examples/video_augmentation.py) contains a cool project with MediaPipe. Where smoke is generated on the forefinger's position. 
-* Demo is at [media/smoke_video.mp4](media/smoke_video.mp4).
+* Demo is at [media/smoke_video.mp4](https://q-viper.github.io/SmokeSim/media/smoke_video.mp4).
 
 
 
