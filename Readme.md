@@ -1,5 +1,5 @@
 # Smoke Generation
-Just some experiments while I am learning about smoke generation and simulating things. Demo: [pages/index.html](https://q-viper.github.io/SmokeSim/pages/index.html). Just move cursor on **Right canvas to see smoke effect**. Video might not play on demo server. But smoke does :)
+Just some experiments while I am learning about smoke generation and simulating things. Demo: [pages/index.html](https://q-viper.github.io/SmokeSim/js_demo/index.html). Just move cursor on **Right canvas to see smoke effect**. Video might not play on demo server. But smoke does :)
 
 ## Disclaimer
 I am no expert in JS and this project uses modified version of following two projects:
@@ -18,7 +18,7 @@ I am no expert in JS and this project uses modified version of following two pro
 #### What to do?
 1. Clone this.
 2. Start a localhost server (on this dir) to avoid CORS Errors. I am using [server.py](server.py) taken from [here](https://gist.github.com/acdha/925e9ffc3d74ad59c3ea#file-simple_cors_server-py). 
-3. Open http://localhost:8003/pages/index.html and see it for yourself.
+3. Open http://localhost:8003/js_demo/index.html and see it for yourself.
 
 ### PyGame Version
 * Left click to **add** new smoke.

@@ -1,12 +1,17 @@
 import pygame_gui
 import pygame
-from smoke import SmokeMachine
-
+from smokesim.smoke import SmokeMachine
+from pathlib import Path
 
 def main():
     pygame.init()
     pygame.display.set_caption("Smoke Simulator")
-    bg = pygame.image.load("assets/me.jpg")
+    img_path = Path("assets/mee.jpg")
+    if img_path.exists():
+        bg = pygame.image.load(str(img_path))
+    else:
+        bg = pygame.Surface((700, 500))
+        bg.fill((0, 0, 0))
     WIDTH, HEIGHT = 700, 500
     container_wh = (WIDTH, 150)
     screen = pygame.display.set_mode((WIDTH, HEIGHT))

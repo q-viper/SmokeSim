@@ -1,13 +1,8 @@
-import time
-import pygame_gui
+
 import pygame
-import cv2
-import random
-import numpy as np
 from dataclasses import dataclass
-from constants import CLOUD_MASK
 from typing import Optional, Tuple, List
-from particle import Particle, ParticleProperty
+from smokesim.particle import Particle, ParticleProperty
 
 
 @dataclass
