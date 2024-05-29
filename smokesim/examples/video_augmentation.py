@@ -11,6 +11,8 @@ if __name__ == "__main__":
     RUN_LIVE = False
     WIDTH, HEIGHT = 700, 500
     MAKE_SMOKE_EVERY = 10
+    OUTPUT_PATH = Path("media/smoke_video.mp4") # set None to disable output
+
 
     video_path = Path("media/vid.mp4")
     augmentation = Augmentation(image_path=None, screen_dim=(WIDTH, HEIGHT))
@@ -24,6 +26,9 @@ if __name__ == "__main__":
         if not video_path.exists():
             raise FileNotFoundError(f"Video file not found at {video_path}")
         cap = cv2.VideoCapture(str(video_path))
+    if OUTPUT_PATH:
+        fourcc = cv2.VideoWriter_fourcc(*"X264")
+        out = cv2.VideoWriter(str(OUTPUT_PATH), fourcc, 20.0, (WIDTH, HEIGHT))
     fno = 0
     with mp_hands.Hands(
         max_num_hands=1, min_detection_confidence=0.9, min_tracking_confidence=0.9
@@ -84,6 +89,8 @@ if __name__ == "__main__":
                     )
                 
                 smoked_array=augmentation.augment(steps=30, image=screen_frame, jump=True)
+                if OUTPUT_PATH:
+                    out.write(smoked_array)
                 cv2.imshow("Orig Frame", frame)
                 # cv2.imshow("Smoked Frame", screen_frame)
                 cv2.imshow("Smoke", smoked_array)
@@ -92,5 +99,7 @@ if __name__ == "__main__":
             if cv2.waitKey(5) & 0xFF == 27:
                 break
     cap.release()
+    if OUTPUT_PATH:
+        out.release()
     cv2.destroyAllWindows()
     augmentation.end()

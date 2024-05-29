@@ -34,7 +34,7 @@ I am no expert in JS and this project uses modified version of following two pro
 ## Using this for Image Augmentation
 ![](assets/augmented_smoke.png)
 
-* Make use of `smokesim/examples/image_augmentation.py`. 
+* Make use of [`smokesim/examples/image_augmentation.py`](smokesim/examples/image_augmentation.py). 
 
 ```python
 from smokesim.augmentation import Augmentation
@@ -75,10 +75,12 @@ if __name__ == "__main__":
     augmentation.end()
 
 ```
-Now `augment` method also accepts image where we want to put smoke. It should be NumPy array. And returns same image after augmenting it. And we can store the smoke history as well. A sample is at [media/smoke_history.mp4](media/smoke_history.mp4).
+* Now `augment` method also accepts image where we want to put smoke. It should be NumPy array. And returns same image after augmenting it. And we can store the smoke history as well. 
+* A sample can be seen at [media/smoke_history.mp4](media/smoke_history.mp4).
 
 ## Using this With Video
-* `smokesim/examples/video_augmentation.py` contains a cool project with MediaPipe. Where smoke is generated on the forefinger's position.
+* [`smokesim/examples/video_augmentation.py`](smokesim/examples/video_augmentation.py) contains a cool project with MediaPipe. Where smoke is generated on the forefinger's position. 
+* Demo is at [media/smoke_video.mp4](media/smoke_video.mp4).
 
 
 

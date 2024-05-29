@@ -102,7 +102,7 @@ class Augmentation:
         if history_path:
             self.writer = cv2.VideoWriter(
                 str(history_path),
-                cv2.VideoWriter_fourcc(*"mp4v"),
+                cv2.VideoWriter_fourcc(*"X264"),
                 30,
                 self.image.get_size(),
             )
