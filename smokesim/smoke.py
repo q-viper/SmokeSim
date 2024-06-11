@@ -27,6 +27,7 @@ class SmokeProperty:
     lifetime: int = -1
     age: int = 0
     id: int = 0
+    seed:int = 100
 
 
 class Smoke:

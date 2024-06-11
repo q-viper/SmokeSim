@@ -6,7 +6,7 @@ from pathlib import Path
 def main():
     pygame.init()
     pygame.display.set_caption("Smoke Simulator")
-    img_path = Path("assets/mee.jpg")
+    img_path = Path("assets/me.jpg")
     if img_path.exists():
         bg = pygame.image.load(str(img_path))
     else:

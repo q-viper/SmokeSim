@@ -58,7 +58,6 @@ class Augmentation:
             self.image = pygame.surfarray.make_surface(self.image)
             self.image.set_alpha(255)
         self.image = pygame.transform.scale(self.image, self.screen_dim)
-
         return self
 
     def make_screen(self) -> pygame.Surface:
@@ -109,6 +108,8 @@ class Augmentation:
         for t in range(steps):
             self.screen.blit(self.image, (0, 0))
             self.smoke_machine.update(time=t)
+            
+
             # self.clock.tick(30)
 
             pygame.display.flip()

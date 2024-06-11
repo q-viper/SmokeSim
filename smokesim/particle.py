@@ -7,12 +7,6 @@ from smokesim.constants import CLOUD_MASK
 from typing import Optional, Tuple
 
 
-def float_in_range(start: float, end: float) -> float:
-    """
-    A function to generate a random float in a given range.
-    """
-    return start + random.random() * (end - start)
-
 
 @dataclass
 class Sprite:
@@ -66,6 +60,7 @@ class ParticleProperty:
     smoke_sprite_size: int = 20
     fade_speed: int = 1
     alpha: int = 255
+    seed:int = 100
 
 
 class Particle:
@@ -96,21 +91,24 @@ class Particle:
             - fade_speed (int, optional): The speed at which the particle fades. Defaults to 1.
             - alpha (int, optional): The alpha of the particle. Defaults to 255.
         """
+        self.seed = property.seed
+        random.seed(self.seed)
+        self.float_in_range = lambda start, end: start + np.random.random() * (end - start)
         self.property = property
         self.x = x
         self.y = y
-        self.vx = property.vx if property.vx is not None else float_in_range(
+        self.vx = property.vx if property.vx is not None else self.float_in_range(
             property.min_vx, property.max_vx)
-        self.startvy = property.startvy if property.startvy is not None else float_in_range(
+        self.startvy = property.startvy if property.startvy is not None else self.float_in_range(
             property.min_vy, property.max_vy)
-        self.scale = property.smoke_sprite_size if property.scale is not None else float_in_range(
+        self.scale = property.smoke_sprite_size if property.scale is not None else self.float_in_range(
             property.min_scale, property.max_scale)
-        self.lifetime = property.lifetime if property.lifetime is not None else float_in_range(
+        self.lifetime = property.lifetime if property.lifetime is not None else self.float_in_range(
             property.min_lifetime, property.max_lifetime)
         self.age = property.age
         self.color = property.color
         self.smoke_sprite_size = property.smoke_sprite_size
-        self.final_scale = float_in_range(self.scale * 0.1,
+        self.final_scale = self.float_in_range(self.scale * 0.1,
                                           self.scale*1.5)
         self.scale_step = (self.final_scale - self.scale) / self.lifetime
         self.vy = self.startvy
