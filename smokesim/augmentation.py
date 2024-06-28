@@ -5,7 +5,6 @@ import pygame
 from typing import Optional, Tuple
 from pathlib import Path
 import numpy as np
-
 import cv2
 
 
@@ -15,6 +14,7 @@ class Augmentation:
         image_path: Optional[Path] = Path("assets/me.jpg"),
         screen_dim: Tuple[int, int] = (500, 700),
         smoke_machine: Optional[SmokeMachine] = None,
+        random_seed: int = 100,
     ):
 
         self.image_path = image_path
@@ -24,8 +24,11 @@ class Augmentation:
 
         self.screen = smoke_machine.screen if smoke_machine else self.make_screen()
         self.smoke_machine = (
-            smoke_machine if smoke_machine else SmokeMachine(self.screen)
+            smoke_machine
+            if smoke_machine
+            else SmokeMachine(self.screen, auto_draw=False)
         )
+        self.smoke_machine.random_seed = random_seed
         self.display_image()
 
     def display_image(self):
@@ -56,8 +59,16 @@ class Augmentation:
             self.image = np.zeros((self.screen_dim[0], self.screen_dim[1], 3))
 
             self.image = pygame.surfarray.make_surface(self.image)
+
             self.image.set_alpha(255)
+
         self.image = pygame.transform.scale(self.image, self.screen_dim)
+        blank_image = pygame.surfarray.make_surface(
+            np.zeros((self.screen_dim[0], self.screen_dim[1], 3))
+        )
+        blank_image.set_alpha(255)
+        self.blank_image = pygame.transform.scale(blank_image, self.screen_dim)
+
         return self
 
     def make_screen(self) -> pygame.Surface:
@@ -81,7 +92,9 @@ class Augmentation:
         """
         self.smoke_machine.add_smoke(args)
 
-    def augment_iter(self, steps: int, image: Optional[np.ndarray], history_path:Path) -> np.ndarray:
+    def augment_iter(
+        self, steps: int, image: Optional[np.ndarray], history_path: Path
+    ) -> np.ndarray:
         """
         A method to augment the image with smoke.
 
@@ -96,7 +109,7 @@ class Augmentation:
         if image is not None:
             self.image = pygame.surfarray.make_surface(image)
             self.image = pygame.transform.scale(self.image, self.screen_dim)
-        
+
         self.writer = None
         if history_path:
             self.writer = cv2.VideoWriter(
@@ -108,18 +121,35 @@ class Augmentation:
         for t in range(steps):
             self.screen.blit(self.image, (0, 0))
             self.smoke_machine.update(time=t)
-            
-
-            # self.clock.tick(30)
+            self.smoke_machine.draw(self.screen)
 
             pygame.display.flip()
             rgb_array = pygame.surfarray.array3d(pygame.display.get_surface())
             if self.writer:
-                self.writer.write(cv2.cvtColor(cv2.rotate(rgb_array, cv2.ROTATE_90_CLOCKWISE), cv2.COLOR_RGB2BGR))
-            yield cv2.rotate(rgb_array, cv2.ROTATE_90_CLOCKWISE)
+                self.writer.write(
+                    cv2.cvtColor(
+                        cv2.rotate(rgb_array, cv2.ROTATE_90_CLOCKWISE),
+                        cv2.COLOR_RGB2BGR,
+                    )
+                )
 
-    def augment(self, steps: int = 2, image: Optional[np.ndarray] = None, 
-                history_path:Optional[Path]=None, jump:bool=False) -> np.ndarray:
+            self.screen.blit(self.blank_image, (0, 0))
+            self.smoke_machine.draw(self.screen)
+
+            pygame.display.flip()
+            rgb_mask_array = pygame.surfarray.array3d(pygame.display.get_surface())
+
+            yield cv2.rotate(rgb_array, cv2.ROTATE_90_CLOCKWISE), cv2.rotate(
+                rgb_mask_array, cv2.ROTATE_90_CLOCKWISE
+            )
+
+    def augment(
+        self,
+        steps: int = 2,
+        image: Optional[np.ndarray] = None,
+        history_path: Optional[Path] = None,
+        jump: bool = False,
+    ) -> Tuple[np.ndarray, np.ndarray]:
         """
         A method to augment the image with smoke.
 
@@ -128,7 +158,7 @@ class Augmentation:
         - steps (int, optional): The number of steps to augment the image. Defaults to 2.
         - image (Optional[np.ndarray], optional): The image to augment. Defaults to None.
         - jump (bool, optional): A flag to jump to the final image. Defaults to False.
-        
+
         Returns:
         ----------------
         - np.ndarray: The augmented image.
@@ -139,17 +169,26 @@ class Augmentation:
         if jump:
             self.screen.blit(self.image, (0, 0))
             self.smoke_machine.update(time=steps)
+            self.smoke_machine.draw(self.screen)
             pygame.display.flip()
             rgb_array = pygame.surfarray.array3d(pygame.display.get_surface())
-            return cv2.rotate(rgb_array, cv2.ROTATE_90_CLOCKWISE)
-        for rgb_array in self.augment_iter(steps, image, history_path=history_path):
+
+            self.screen.blit(self.blank_image, (0, 0))
+            self.smoke_machine.draw(self.screen)
+            pygame.display.flip()
+            rgb_mask_array = pygame.surfarray.array3d(pygame.display.get_surface())
+            self.last_aug_img, self.last_aug_mask = cv2.rotate(
+                rgb_array, cv2.ROTATE_90_CLOCKWISE
+            ), cv2.rotate(rgb_mask_array, cv2.ROTATE_90_CLOCKWISE)
+            return self.last_aug_img, self.last_aug_mask
+        for rgb_array, rgb_mask_array in self.augment_iter(
+            steps, image, history_path=history_path
+        ):
             pass
         if self.writer:
             self.writer.release()
-        return rgb_array
-
-    
-        
+        self.last_aug_img, self.last_aug_mask = rgb_array, rgb_mask_array
+        return self.last_aug_img, self.last_aug_mask
 
     def save_as(self, out_dir: Path = Path("assets/augmented_smoke.png")):
         """
@@ -159,7 +198,12 @@ class Augmentation:
         - out_dir (Path, optional): The output directory to save the image. Defaults to Path('assets/augmented_smoke.png').
 
         """
-        pygame.image.save(self.screen, str(out_dir))
+        # pygame.image.save(self.screen, str(out_dir))
+        cv2.imwrite(str(out_dir), cv2.cvtColor(self.last_aug_img, cv2.COLOR_RGB2BGR))
+        cv2.imwrite(
+            str(out_dir.parent / out_dir.name + "_mask.png"),
+            cv2.cvtColor(self.last_aug_mask, cv2.COLOR_RGB2BGR),
+        )
         print(f"Saved augmented image as {out_dir}")
 
     def end(self):

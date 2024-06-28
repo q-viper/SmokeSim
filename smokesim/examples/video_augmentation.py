@@ -1,4 +1,3 @@
-
 import cv2
 import mediapipe as mp
 from smokesim.augmentation import Augmentation
@@ -11,8 +10,7 @@ if __name__ == "__main__":
     RUN_LIVE = False
     WIDTH, HEIGHT = 700, 500
     MAKE_SMOKE_EVERY = 10
-    OUTPUT_PATH = Path("media/smoke_video.mp4") # set None to disable output
-
+    OUTPUT_PATH = Path("media/smoke_video.mp4")  # set None to disable output
 
     video_path = Path("media/vid.mp4")
     augmentation = Augmentation(image_path=None, screen_dim=(WIDTH, HEIGHT))
@@ -87,12 +85,14 @@ if __name__ == "__main__":
                             },
                         )
                     )
-                
-                smoked_array=augmentation.augment(steps=30, image=screen_frame, jump=True)
+
+                smoked_array, mask = augmentation.augment(
+                    steps=30, image=screen_frame, jump=True
+                )
                 if OUTPUT_PATH:
                     out.write(smoked_array)
                 cv2.imshow("Orig Frame", frame)
-                # cv2.imshow("Smoked Frame", screen_frame)
+                cv2.imshow("Mask Frame", mask)
                 cv2.imshow("Smoke", smoked_array)
             else:
                 break

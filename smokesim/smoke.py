@@ -1,12 +1,12 @@
+from typing import List, Optional, Tuple
 
 import pygame
-from dataclasses import dataclass
-from typing import Optional, Tuple, List
+
+from smokesim.base import BaseProperty, BaseSim
 from smokesim.particle import Particle, ParticleProperty
 
 
-@dataclass
-class SmokeProperty:
+class SmokeProperty(BaseProperty):
     """
     A dataclass to represent the arguments for a smoke.
 
@@ -19,6 +19,7 @@ class SmokeProperty:
     - age (int, optional): The age of the smoke. Defaults to 0.
     - id (int, optional): The id of the smoke. Defaults to 0.
     """
+
     origin: Tuple[int, int] = (100, 100)
     particle_count: int = 100
     color: Tuple[int, int, int] = (24, 46, 48)
@@ -27,10 +28,9 @@ class SmokeProperty:
     lifetime: int = -1
     age: int = 0
     id: int = 0
-    seed:int = 100
 
 
-class Smoke:
+class Smoke(BaseSim):
     def __init__(self, screen: pygame.Surface, smoke_property: SmokeProperty):
         """
         Class to represent a smoke object. Smoke is made up of particles.
@@ -40,6 +40,7 @@ class Smoke:
         - smoke_property (SmokeProperty): The properties of the smoke.
 
         """
+        super().__init__(smoke_property)
         self.origin = smoke_property.origin
         self.id = smoke_property.id
         self.screen = screen
@@ -49,6 +50,7 @@ class Smoke:
         self.lifetime = smoke_property.lifetime
         self.age = smoke_property.age
         self.particles: List[Particle] = []
+        self.particles_until_now = 0
         self.particle_property = smoke_property.particle_property
         self.create_particles(self.particle_property)
 
@@ -60,17 +62,24 @@ class Smoke:
         - particle_property (Optional[ParticleProperty], optional): The properties of the particles. Defaults to None.
         """
         particles = []
-        for _ in range(self.particle_count):
+        for p in range(self.particle_count):
             x, y = self.origin
             if particle_property:
-
+                particle_property.random_seed += self.particles_until_now * (
+                    self.id + 1
+                )
                 particle = Particle(x, y, particle_property)
             else:
-                particle_property = ParticleProperty(color=self.color,
-                                                     smoke_sprite_size=self.sprite_size)
+                particle_property = ParticleProperty(
+                    color=self.color, smoke_sprite_size=self.sprite_size
+                )
+                particle_property.random_seed += self.particles_until_now * (
+                    self.id + 1
+                )
                 particle = Particle(x, y, particle_property)
 
             particles.append(particle)
+            self.particles_until_now += 1
         self.particles.extend(particles)
 
     def update(self, time: float = 1):
@@ -85,7 +94,7 @@ class Smoke:
         for particle in self.particles:
             particle.update(time)
             if particle.is_alive:
-                particle.draw(self.screen)
+                # particle.draw(self.screen)
                 new_particles.append(particle)
             else:
                 del particle
@@ -97,10 +106,23 @@ class Smoke:
             self.create_particles(self.particle_property)
         # print(f"ID: {self.id}, Num particles: {len(self.particles)}")
 
+    def draw(self, screen: Optional[pygame.Surface] = None):
+        screen = screen if screen else self.screen
+        for particle in self.particles:
+            particle.draw(screen)
+
 
 class SmokeMachine:
-    def __init__(self, screen: pygame.Surface, default_particle_count: int = 100,
-                 default_color: Tuple[int, int, int] = (24, 46, 48), default_sprite_size: int = 20):
+    def __init__(
+        self,
+        screen: pygame.Surface,
+        default_particle_count: int = 100,
+        default_color: Tuple[int, int, int] = (24, 46, 48),
+        default_sprite_size: int = 20,
+        random_seed: int = 100,
+        versbose: bool = False,
+        auto_draw: bool = True,
+    ):
         """
         A class to represent a smoke machine. The smoke machine creates and manages smoke objects.
 
@@ -118,6 +140,9 @@ class SmokeMachine:
         self.time = 0
         self.smokes: List[Smoke] = []
         self.last_smoke_id = -1
+        self.random_seed = random_seed
+        self.verbose = versbose
+        self.auto_draw = auto_draw
 
     def add_smoke(self, args: dict):
         """
@@ -128,32 +153,36 @@ class SmokeMachine:
 
         """
 
-        if 'color' not in args:
-            args['color'] = self.color
-        if 'particle_count' not in args:
-            args['particle_count'] = self.particle_count
-        if 'sprite_size' not in args:
-            args['sprite_size'] = self.sprite_size
-        if 'id' not in args:
-            args['id'] = self.last_smoke_id+1
-        if 'particle_args' in args:
-            particle_args = args['particle_args']
+        if "color" not in args:
+            args["color"] = self.color
+        if "particle_count" not in args:
+            args["particle_count"] = self.particle_count
+        if "sprite_size" not in args:
+            args["sprite_size"] = self.sprite_size
+        if "id" not in args:
+            args["id"] = self.last_smoke_id + 1
+        if "particle_args" in args:
+            particle_args = args["particle_args"]
+            if particle_args.get("random_seed") is None:
+                particle_args["random_seed"] = self.random_seed
             particle_property = ParticleProperty(**particle_args)
-            args['particle_property'] = particle_property
-            del args['particle_args']
+            # print(f"Particle property: {particle_property}")
+            args["particle_property"] = particle_property
+            del args["particle_args"]
+        else:
+            args["particle_property"] = ParticleProperty(random_seed=self.random_seed)
         smoke_property = SmokeProperty(**args)
-        smoke = Smoke(self.screen,
-                      smoke_property)
+        smoke = Smoke(self.screen, smoke_property)
         self.smokes.append(smoke)
         self.last_smoke_id += 1
-        print(
-            f"Added smoke with id: {smoke.id}, particles: {len(smoke.particles)}")
+        if self.verbose:
+            print(f"Added smoke with id: {smoke.id}, particles: {len(smoke.particles)}")
 
     def empty(self):
         """
         A method to empty the smoke machine.
         """
-        print('Emptying smoke')
+        print("Emptying smoke")
         for s in self.smokes:
             s.age = s.lifetime
             for p in s.particles:
@@ -182,3 +211,17 @@ class SmokeMachine:
             else:
                 new_smokes.append(smoke)
         self.smokes = new_smokes
+
+        if self.auto_draw:
+            self.draw()
+
+    def draw(self, screen: Optional[pygame.Surface] = None):
+        """
+        A method to draw the smoke machine.
+
+        Args:
+        - screen (Optional[pygame.Surface], optional): The screen to draw the smoke machine on. Defaults to None.
+        """
+        screen = screen if screen else self.screen
+        for smoke in self.smokes:
+            smoke.draw(screen)

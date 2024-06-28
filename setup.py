@@ -11,6 +11,7 @@ setup(
     "pygame_gui==0.6.9",
     "mediapipe",
         "black",
+        'pydantic'
     ],
     author="Ramkrishna Acharya(QViper)",
     author_email="qramkrishna@gmail.com",
