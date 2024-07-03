@@ -93,8 +93,8 @@ class Augmentation:
         self.smoke_machine.add_smoke(args)
 
     def augment_iter(
-        self, steps: int, image: Optional[np.ndarray], history_path: Path
-    ) -> np.ndarray:
+        self, steps: int, image: Optional[np.ndarray], history_path: Optional[Path]=None
+    ) :
         """
         A method to augment the image with smoke.
 
@@ -114,7 +114,7 @@ class Augmentation:
         if history_path:
             self.writer = cv2.VideoWriter(
                 str(history_path),
-                cv2.VideoWriter_fourcc(*"X264"),
+                cv2.VideoWriter_fourcc(*"mp4v"),
                 30,
                 self.image.get_size(),
             )
@@ -201,7 +201,7 @@ class Augmentation:
         # pygame.image.save(self.screen, str(out_dir))
         cv2.imwrite(str(out_dir), cv2.cvtColor(self.last_aug_img, cv2.COLOR_RGB2BGR))
         cv2.imwrite(
-            str(out_dir.parent / out_dir.name + "_mask.png"),
+            str(out_dir.parent / (out_dir.stem + "_mask.png")),
             cv2.cvtColor(self.last_aug_mask, cv2.COLOR_RGB2BGR),
         )
         print(f"Saved augmented image as {out_dir}")
