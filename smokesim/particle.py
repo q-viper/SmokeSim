@@ -212,6 +212,9 @@ class Particle(BaseSim):
         screen.blit(self.sprite_paint, (int(self.x), int(self.y)))
 
     def __del__(self):
-        del self.sprite_paint
-        del self.sprite
-        del self.surface
+        try:
+            del self.sprite_paint
+            del self.sprite
+            del self.surface
+        except AttributeError:
+            pass
