@@ -65,17 +65,13 @@ class Smoke(BaseSim):
         for p in range(self.particle_count):
             x, y = self.origin
             if particle_property:
-                particle_property.random_seed += self.particles_until_now * (
-                    self.id + 1
-                )
+                particle_property.random_seed = self.random_state.randint(0, 100000)
                 particle = Particle(x, y, particle_property)
             else:
                 particle_property = ParticleProperty(
                     color=self.color, smoke_sprite_size=self.sprite_size
                 )
-                particle_property.random_seed += self.particles_until_now * (
-                    self.id + 1
-                )
+                particle_property.random_seed = self.random_state.randint(0, 100000)
                 particle = Particle(x, y, particle_property)
 
             particles.append(particle)
