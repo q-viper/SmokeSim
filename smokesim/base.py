@@ -13,6 +13,7 @@ class BaseProperty(BaseModel):
     class Config:
         arbitrary_types_allowed = True
 
+
 class BaseSim:
     """
     Base class for simulation
@@ -21,16 +22,15 @@ class BaseSim:
     def __init__(self, property: BaseProperty):
         self.property = property
         self.base_random_state = np.random.RandomState(property.random_seed)
-        
 
     @property
     def random_state(self):
         # return np.random.RandomState(self.base_random_state.randint(0, 1000000))
         return self.base_random_state
-    
+
     def float_in_range(self, start, end):
         return start + self.random_state.random() * (end - start)
-        
+
     @staticmethod
     def update(self, **kwargs):
         raise NotImplementedError

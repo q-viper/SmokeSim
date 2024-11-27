@@ -93,8 +93,11 @@ class Augmentation:
         self.smoke_machine.add_smoke(args)
 
     def augment_iter(
-        self, steps: int, image: Optional[np.ndarray], history_path: Optional[Path]=None
-    ) :
+        self,
+        steps: int,
+        image: Optional[np.ndarray],
+        history_path: Optional[Path] = None,
+    ):
         """
         A method to augment the image with smoke.
 

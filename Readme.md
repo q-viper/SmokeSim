@@ -1,40 +1,66 @@
-# Smoke Generation
-Just some experiments while I am learning about smoke generation and simulating things. Demo: [pages/index.html](https://q-viper.github.io/SmokeSim/js_demo/index.html). Just move cursor on **Right canvas to see smoke effect**. Video might not play on demo server. But smoke does :)
+# Smoke Simulation: Experiments in Generating and Simulating Smoke Effects
+![Dependabot Status](https://img.shields.io/badge/dependabot-active-brightgreen)
+![GitHub License](https://img.shields.io/github/license/q-viper/SmokeSim/)
+![commit activity](https://img.shields.io/github/commit-activity/w/q-viper/SmokeSim/)
+![code size in bytes](https://img.shields.io/github/languages/code-size/q-viper/SmokeSim/)
+![Tests](https://github.com/q-viper/SmokeSim/actions/workflows/test-on-push.yml/badge.svg)
+![Code Formatting](https://github.com/q-viper/SmokeSim/actions/workflows/black-formatter.yml/badge.svg)
+[![Coverage Status](https://coveralls.io/repos/github/q-viper/SmokeSim//badge.svg?branch=main)](https://coveralls.io/github/q-viper/SmokeSim/?branch=main)
+
+
+
+This project showcases my experiments in simulating smoke effects using both **JavaScript** and **Python**. The project utilizes and extends two open-source libraries to demonstrate smoke generation in various contexts, including interactive demos, image augmentation, and video processing.
 
 ## Disclaimer
-I am no expert in JS and this project uses modified version of following two projects:
-* [pages/scripts/smoke.js](pages/scripts/smoke.js) from: [bijection/smoke.js](https://github.com/bijection/smoke.js/)
-* [pages/scripts/processor.js](pages/scripts/processor.js) from: [processor.js](https://github.com/mdn/dom-examples/blob/main/canvas/chroma-keying/processor.js)
+This project is an educational exploration, and I am not an expert in JavaScript. The implementation builds on the following two projects, which have been modified to suit the goals of this project:
 
-**Huuuuuuuuuuge credit goes to original authors.**
+- [`pages/scripts/smoke.js`](pages/scripts/smoke.js): Adapted from [bijection/smoke.js](https://github.com/bijection/smoke.js)
+- [`pages/scripts/processor.js`](pages/scripts/processor.js): Based on [processor.js](https://github.com/mdn/dom-examples/blob/main/canvas/chroma-keying/processor.js)
 
-## Demo 
+**Credits:** A huge thanks to the original authors for their incredible work.
+
+---
+
+## Demos 
 ### JavaScript Version
-* On rightmost panel where video is being re-played, we can perform hover, click action to see smoke movement.
-* Tweaking UI elements also works.
 
+This demo showcases real-time smoke effects on a web-based canvas:
+- **Interaction:** Hover and click on the rightmost canvas to observe smoke movement.
+- **Customization:** UI elements allow tweaking of smoke parameters.
+
+#### How to Run:
+1. Clone this repository.
+2. Start a local HTTP server in the project directory to avoid CORS errors. For example:
+   ```bash
+   python server.py
+   ```
+(This uses server.py adapted from this gist.) 
+3. Navigate to http://localhost:8003/js_demo/index.html.
+
+#### Preview:
 ![](assets/js_demo.png)
 
-#### What to do?
-1. Clone this.
-2. Start a localhost server (on this dir) to avoid CORS Errors. I am using [server.py](server.py) taken from [here](https://gist.github.com/acdha/925e9ffc3d74ad59c3ea#file-simple_cors_server-py). 
-3. Open http://localhost:8003/js_demo/index.html and see it for yourself.
 
 ### PyGame Version
-* Left click to **add** new smoke.
-* Right click to **clear and write** new smoke.
-* Hover to see wind effect.
 
+This demo uses PyGame to simulate smoke effects with interactive mouse controls:
+- **Left Click:** Add new smoke particles.
+- **Right Click:** Clear the canvas and add new smoke.
+- **Hover:** Apply wind effects to influence smoke direction.
 
-![](assets/py_demo.png)
+#### Preview:
+![PyGame Demo](assets/py_demo.png)
 
-#### What to do?
-* Run `particle.py` and TADAAAAAAAAAA!
+#### How to Run:
+1. Execute the following command:
+```bash
+   python particle.py
+```
 
 ## Using this for Image Augmentation
-![](assets/augmented_smoke.png)
+This project also supports generating smoke effects for use in image augmentation. The `smokesim` Python module allows for realistic smoke overlays on static images.
 
-* Make use of [`smokesim/examples/image_augmentation.py`](smokesim/examples/image_augmentation.py). 
+### Example:
 
 ```python
 from smokesim.augmentation import Augmentation
@@ -75,16 +101,23 @@ if __name__ == "__main__":
     augmentation.end()
 
 ```
+
+* A better example is at [`smokesim/examples/image_augmentation.py`](smokesim/examples/image_augmentation.py). 
 * Now `augment` method also accepts image where we want to put smoke. It should be NumPy array. And returns same image after augmenting it. And we can store the smoke history as well. 
 * A sample can be seen at [media/smoke_history.mp4](https://q-viper.github.io/SmokeSim/media/smoke_history.mp4).
 
+### Preview
+![](assets/augmented_smoke.png)
+
+
 ## Using this With Video
-* [`smokesim/examples/video_augmentation.py`](smokesim/examples/video_augmentation.py) contains a cool project with MediaPipe. Where smoke is generated on the forefinger's position. 
+* [`smokesim/examples/video_augmentation.py`](smokesim/examples/video_augmentation.py) contains a cool project with MediaPipe (installation is required first: `pip install mediapipe==0.10.14`). Where smoke is generated on the forefinger's position. 
 * Demo is at [media/smoke_video.mp4](https://q-viper.github.io/SmokeSim/media/smoke_video.mp4).
 
 
 
 ## To do
-* Add collision effect.
+* Add collision effect between particles.
 * Add wind effect.
-* Make it smooth.
+* Try to add smoother transition.
+* Make it faster. Currently I am not deleting particles that are out for the scene. 

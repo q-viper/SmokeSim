@@ -13,7 +13,9 @@ if __name__ == "__main__":
     augmentation.add_smoke(dict(particle_count=15, sprite_size=25, origin=(450, 500)))
     random_state = np.random.RandomState(42)
 
-    final_image = augmentation.augment(steps=90, history_path=Path('media/smoke_history.mp4'))
+    final_image = augmentation.augment(
+        steps=90, history_path=Path("media/smoke_history.mp4")
+    )
     final_image, final_mask = augmentation.augment(steps=90)
     for i in range(5):
         augmentation.add_smoke(
