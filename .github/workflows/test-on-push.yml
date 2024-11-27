@@ -4,12 +4,11 @@ name: Run Tests on Push
 on:
   push:
     branches:
-      - "**"
+      - "master"
 
 jobs:
   test:
     runs-on: ubuntu-latest
-    id: test
 
     steps:
       # Checkout the repository
