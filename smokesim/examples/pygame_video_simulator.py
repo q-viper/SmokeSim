@@ -27,7 +27,7 @@ def next_frame(cap, HEIGHT, WIDTH):
 def main():
     pygame.init()
     pygame.display.set_caption("Smoke Simulator")
-    video_path = Path("my_vid.mp4")
+    video_path = Path("demo/vid.mp4")
     WIDTH, HEIGHT = 1000, 700
     save_dir = Path(r"\assets\generated")
 

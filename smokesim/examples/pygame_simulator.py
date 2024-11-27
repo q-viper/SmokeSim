@@ -276,7 +276,7 @@ def main():
                     smoke_subsurface = screen.subsurface(
                         (0, container_wh[1], WIDTH, HEIGHT - container_wh[1])
                     )
-                    pygame.image.save(smoke_subsurface, f"smoke.png")
+                    pygame.image.save(smoke_subsurface, "smoke.png")
                 if event.ui_element == clear_button:
                     smoke_machine.empty()
                     steps = 0
