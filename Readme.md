@@ -5,8 +5,7 @@
 ![code size in bytes](https://img.shields.io/github/languages/code-size/q-viper/SmokeSim/)
 ![Tests](https://github.com/q-viper/SmokeSim/actions/workflows/test-on-push.yml/badge.svg)
 ![Code Formatting](https://github.com/q-viper/SmokeSim/actions/workflows/black-formatter.yml/badge.svg)
-[![Coverage Status](https://coveralls.io/repos/github/q-viper/SmokeSim//badge.svg?branch=main)](https://coveralls.io/github/q-viper/SmokeSim/?branch=main)
-
+[![Coverage Status](https://coveralls.io/repos/github/q-viper/SmokeSim//badge.svg?branch=master)](https://coveralls.io/github/q-viper/SmokeSim/?branch=master)
 
 
 This project showcases my experiments in simulating smoke effects using both **JavaScript** and **Python**. The project utilizes and extends two open-source libraries to demonstrate smoke generation in various contexts, including interactive demos, image augmentation, and video processing.
@@ -18,6 +17,41 @@ This project is an educational exploration, and I am not an expert in JavaScript
 - [`pages/scripts/processor.js`](pages/scripts/processor.js): Based on [processor.js](https://github.com/mdn/dom-examples/blob/main/canvas/chroma-keying/processor.js)
 
 **Credits:** A huge thanks to the original authors for their incredible work.
+
+
+## Why am I doing this?
+
+<details>
+  <summary>Click to expand</summary>
+  
+  ### **Short Answer**  
+  For fun!
+
+  ### **Long Answer**  
+  As an engineer working on computer vision applications, I frequently need to train models in diverse environments. One challenging scenario is generating realistic smoky environments, which are difficult to replicate in real-time, especially when high-quality, dynamic simulations are needed for training. 
+
+  To solve this problem, I created this tool to simulate smoke effects and integrate them into various projects—whether for training models or enhancing visual effects. This solution allows for more control, flexibility, and realism when simulating smoke, and it's fun to build and experiment with!
+
+</details>
+
+## Use Cases
+
+<details>
+  <summary>Click to expand</summary>
+
+  ### **Smoke Overlaying**  
+  For the vision applications running in smokey environment, this tool can generate smokey frames on demand by overlaying smoke on a single clean image. 
+
+  ### **Smoke Segmentation**  
+  This might not be that important but I was trying to build a model that could reconstruct a clean image from a smokey one and I used the segmentation mask and history generated from this tool in that project.
+</details>
+
+## Installation
+1. `git clone https://github.com/q-viper/SmokeSim.git`
+2. `cd SmokeSim`
+2. `pip install .`
+
+Please make an issue if it failed.
 
 ---
 
@@ -34,7 +68,7 @@ This demo showcases real-time smoke effects on a web-based canvas:
    ```bash
    python server.py
    ```
-(This uses server.py adapted from this gist.) 
+(This uses [`server.py`](server.py) adapted from this [gist](https://gist.github.com/acdha/925e9ffc3d74ad59c3ea#file-simple_cors_server-py).) 
 3. Navigate to http://localhost:8003/js_demo/index.html.
 
 #### Preview:
@@ -121,3 +155,6 @@ if __name__ == "__main__":
 * Add wind effect.
 * Try to add smoother transition.
 * Make it faster. Currently I am not deleting particles that are out for the scene. 
+
+## Collaborating
+If you find this project to be interesting and want to add changes, please add your changes and make the push request. Or you can make an issue for that.
