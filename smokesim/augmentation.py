@@ -1,5 +1,4 @@
-from smokesim.smoke import SmokeMachine, SmokeProperty
-from smokesim.particle import ParticleProperty
+from smokesim.smoke import SmokeMachine
 
 import pygame
 from typing import Optional, Tuple
