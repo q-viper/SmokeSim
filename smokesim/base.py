@@ -9,7 +9,7 @@ class BaseProperty(BaseModel):
 
     random_seed: int = 1000
 
-    class Config:
+    class ConfigDict:
         arbitrary_types_allowed = True
 
 
