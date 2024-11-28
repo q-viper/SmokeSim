@@ -27,23 +27,23 @@ jobs:
           python -m pip install --upgrade pip
           pip install pytest
           pip install -e .
+          pip install coveralls coverage
 
-      # Run tests
-      - name: Run test script
+      - name: Set PYTHONPATH
         run: |
-          pytest --maxfail=1 --disable-warnings -q  # Optional: limit test failures and suppress warnings for a clean output
+          echo "PYTHONPATH=$PYTHONPATH:$(pwd)" >> $GITHUB_ENV
 
-      # Run tests with coverage
+      - name: Run tests
+        run: |
+          pytest --cov=SmokeSim
+
       - name: Run tests with coverage
         run: |
-          pip install coveralls coverage
-          coverage run -m pytest  # Run tests with coverage
-          coverage report -m  # Show coverage results in the terminal
-          coverage html -d coverage_html_report  # Optional: Generate HTML report for better coverage insight
-          ls coverage_html_report  # Optional: List the contents of the HTML report directory
+          coverage run --source=SmokeSim -m pytest tests/ 
 
-      # Upload coverage to Coveralls
       - name: Upload coverage to Coveralls
-        uses: coverallsapp/github-action@v2
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }} # Automatically provided by GitHub
+        run: |
+          coveralls
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COVERALLS_SERVICE_NAME: "github-actions"
