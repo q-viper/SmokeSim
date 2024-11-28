@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 import numpy as np
 
 
@@ -7,10 +7,8 @@ class BaseProperty(BaseModel):
     Just to make sure same random states will be used everywhere.
     """
 
+    model_config = ConfigDict(arbitrary_types_allowed=True)
     random_seed: int = 1000
-
-    class ConfigDict:
-        arbitrary_types_allowed = True
 
 
 class BaseSim:
