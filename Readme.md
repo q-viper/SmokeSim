@@ -1,4 +1,4 @@
-# Smoke Simulation: Experiments in Generating and Simulating Smoke Effects
+# Smoke Simulation: Experiments in Generating and Augmenting Smoke
 ![Dependabot Status](https://img.shields.io/badge/dependabot-active-brightgreen)
 ![GitHub License](https://img.shields.io/github/license/q-viper/SmokeSim)
 ![commit activity](https://img.shields.io/github/commit-activity/w/q-viper/SmokeSim/master)
