@@ -35,7 +35,7 @@ jobs:
 
       - name: Run tests
         run: |
-          pytest --cov=SmokeSim
+          pytest .
 
       - name: Run tests with coverage
         run: |
