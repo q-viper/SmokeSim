@@ -157,6 +157,8 @@ class SmokeMachine:
             args["sprite_size"] = self.sprite_size
         if "id" not in args:
             args["id"] = self.last_smoke_id + 1
+        if "random_seed" not in args:
+            args["random_seed"] = self.random_seed
         if "particle_args" in args:
             particle_args = args["particle_args"]
             if particle_args.get("random_seed") is None:

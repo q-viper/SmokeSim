@@ -26,7 +26,7 @@ class Augmentation:
         self.smoke_machine = (
             smoke_machine
             if smoke_machine
-            else SmokeMachine(self.screen, auto_draw=False)
+            else SmokeMachine(self.screen, auto_draw=False, random_seed=random_seed)
         )
         self.smoke_machine.random_seed = random_seed
         self.display_image()

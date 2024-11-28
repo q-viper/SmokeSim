@@ -1,8 +1,8 @@
 # Smoke Simulation: Experiments in Generating and Simulating Smoke Effects
 ![Dependabot Status](https://img.shields.io/badge/dependabot-active-brightgreen)
-![GitHub License](https://img.shields.io/github/license/q-viper/SmokeSim/master)
+![GitHub License](https://img.shields.io/github/license/q-viper/SmokeSim)
 ![commit activity](https://img.shields.io/github/commit-activity/w/q-viper/SmokeSim/master)
-![code size in bytes](https://img.shields.io/github/languages/code-size/q-viper/SmokeSim/master)
+![code size in bytes](https://img.shields.io/github/languages/code-size/q-viper/SmokeSim)
 ![Tests](https://github.com/q-viper/SmokeSim/actions/workflows/test-on-push.yml/badge.svg)
 ![Code Formatting](https://github.com/q-viper/SmokeSim/actions/workflows/black-formatter.yml/badge.svg)
 [![Coverage Status](https://coveralls.io/repos/github/q-viper/SmokeSim//badge.svg?branch=master)](https://coveralls.io/github/q-viper/SmokeSim/?branch=master)
