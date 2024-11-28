@@ -32,3 +32,13 @@ jobs:
       - name: Run test script
         run: |
           pytest .
+      - name: Run tests with coverage
+        run: |
+          pip install coverage
+          coverage run -m pytest  # Run tests with coverage
+          coverage report -m  # Show coverage results in the terminal
+
+      - name: Upload coverage to Coveralls
+        uses: coverallsapp/github-action@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}  # Automatically provided by GitHub
