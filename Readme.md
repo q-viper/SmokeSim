@@ -68,7 +68,7 @@ This demo showcases real-time smoke effects on a web-based canvas:
    ```bash
    python server.py
    ```
-(This uses [`server.py`](server.py) adapted from this [gist](https://gist.github.com/acdha/925e9ffc3d74ad59c3ea#file-simple_cors_server-py).) 
+(This uses [`examples/server.py`](examples/server.py) adapted from this [gist](https://gist.github.com/acdha/925e9ffc3d74ad59c3ea#file-simple_cors_server-py).) 
 3. Navigate to http://localhost:8003/js_demo/index.html.
 
 #### Preview:
