@@ -36,6 +36,7 @@ jobs:
       # Run tests with coverage
       - name: Run tests with coverage
         run: |
+          pip install coveralls coverage
           coverage run -m pytest  # Run tests with coverage
           coverage report -m  # Show coverage results in the terminal
           coverage html -d coverage_html_report  # Optional: Generate HTML report for better coverage insight
