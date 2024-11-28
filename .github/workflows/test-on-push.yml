@@ -39,7 +39,7 @@ jobs:
 
       - name: Run tests with coverage
         run: |
-          coverage run --source=SmokeSim -m pytest tests/ 
+          coverage run --source=smokesim -m pytest tests/ 
 
       - name: Upload coverage to Coveralls
         run: |
