@@ -8,7 +8,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/q-viper/SmokeSim/badge.svg?branch=master)](https://coveralls.io/github/q-viper/SmokeSim?branch=master)
 
 
-This project showcases my experiments in simulating smoke effects using both **JavaScript** and **Python**. The project utilizes and extends two open-source libraries to demonstrate smoke generation in various contexts, including interactive demos, image augmentation, and video processing. 
+This project showcases my experiments in simulating smoke effects using both **JavaScript** and **Python**. The project utilizes and extends two open-source libraries to demonstrate smoke generation in various contexts, including interactive demos, image augmentation, and video processing. For playground, please visit [here](https://q-viper.github.io/SmokeSim/js_demo/).
 
 ## Disclaimer
 This project is an educational exploration, and I am not an expert in JavaScript. The implementation builds on the following two projects, which have been modified to suit the goals of this project:
