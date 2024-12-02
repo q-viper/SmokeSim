@@ -58,7 +58,7 @@ Please make an issue if it failed.
 ## Demos 
 ### JavaScript Version
 
-Playground is available in [](https://q-viper.github.io/SmokeSim/js_demo/).
+Playground is available [here](https://q-viper.github.io/SmokeSim/js_demo/).
 
 This demo showcases real-time smoke effects on a web-based canvas:
 - **Interaction:** Hover and click on the rightmost canvas to observe smoke movement.
