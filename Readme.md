@@ -8,7 +8,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/q-viper/SmokeSim/badge.svg?branch=master)](https://coveralls.io/github/q-viper/SmokeSim?branch=master)
 
 
-This project showcases my experiments in simulating smoke effects using both **JavaScript** and **Python**. The project utilizes and extends two open-source libraries to demonstrate smoke generation in various contexts, including interactive demos, image augmentation, and video processing.
+This project showcases my experiments in simulating smoke effects using both **JavaScript** and **Python**. The project utilizes and extends two open-source libraries to demonstrate smoke generation in various contexts, including interactive demos, image augmentation, and video processing. 
 
 ## Disclaimer
 This project is an educational exploration, and I am not an expert in JavaScript. The implementation builds on the following two projects, which have been modified to suit the goals of this project:
@@ -58,6 +58,8 @@ Please make an issue if it failed.
 ## Demos 
 ### JavaScript Version
 
+Playground is available in [](https://q-viper.github.io/SmokeSim/js_demo/).
+
 This demo showcases real-time smoke effects on a web-based canvas:
 - **Interaction:** Hover and click on the rightmost canvas to observe smoke movement.
 - **Customization:** UI elements allow tweaking of smoke parameters.
@@ -69,6 +71,7 @@ This demo showcases real-time smoke effects on a web-based canvas:
    python server.py
    ```
 (This uses [`examples/server.py`](examples/server.py) adapted from this [gist](https://gist.github.com/acdha/925e9ffc3d74ad59c3ea#file-simple_cors_server-py).) 
+
 3. Navigate to http://localhost:8003/js_demo/index.html.
 
 #### Preview:
