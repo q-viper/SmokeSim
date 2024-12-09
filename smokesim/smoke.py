@@ -4,6 +4,7 @@ import pygame
 
 from smokesim.base import BaseProperty, BaseSim
 from smokesim.particle import Particle, ParticleProperty
+import time
 
 
 class SmokeProperty(BaseProperty):
@@ -63,27 +64,30 @@ class Smoke(BaseSim):
         """
         particles = []
         for p in range(self.particle_count):
+            particle_id = f"{self.id}_{self.particles_until_now}"
             x, y = self.origin
             if particle_property:
                 particle_property.random_seed = self.random_state.randint(0, 100000)
-                particle = Particle(x, y, particle_property)
             else:
                 particle_property = ParticleProperty(
                     color=self.color, smoke_sprite_size=self.sprite_size
                 )
                 particle_property.random_seed = self.random_state.randint(0, 100000)
-                particle = Particle(x, y, particle_property)
+
+            particle_property.id = particle_id
+            particle = Particle(x, y, particle_property)
 
             particles.append(particle)
             self.particles_until_now += 1
+            # print(p, particle_id)
         self.particles.extend(particles)
 
-    def update(self, time: float = 1):
+    def update(self, time: float = 30):
         """
         A method to update the smoke.
 
         Args:
-        - time (float, optional): The time to update the smoke by. Defaults to 1.
+        - time (float, optional): The time to update the smoke by. Defaults to 30.
         """
         self.age += time
         new_particles = []
@@ -146,6 +150,7 @@ class SmokeMachine:
 
         Args:
         - args (dict): The arguments to pass to the Smoke class.
+            If `particle_args` is in the args, it will be passed to the ParticleProperty class.
 
         """
 
@@ -190,12 +195,12 @@ class SmokeMachine:
             del s
         self.smokes = []
 
-    def update(self, time: float = 1):
+    def update(self, time: float = 30):
         """
         A method to update the smoke machine.
 
         Args:
-        - time (float, optional): The time to update the smoke machine by. Defaults to 1.
+        - time (float, optional): The time to update the smoke machine by. Defaults to 30.
         """
         self.time += time
         new_smokes = []

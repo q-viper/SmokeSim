@@ -11,7 +11,7 @@ def next_frame(cap, HEIGHT, WIDTH):
     if ret:
         pass
     else:
-        frame = np.zeros((HEIGHT, WIDTH, 3))
+        frame = np.zeros((HEIGHT, WIDTH, 3), dtype=np.uint8)
 
     screen_frame = cv2.resize(
         cv2.rotate(
@@ -27,7 +27,7 @@ def next_frame(cap, HEIGHT, WIDTH):
 def main():
     pygame.init()
     pygame.display.set_caption("Smoke Simulator")
-    video_path = Path("demo/vid.mp4")
+    video_path = Path("media/vid.mp4")
     WIDTH, HEIGHT = 1000, 700
     save_dir = Path(r"\assets\generated")
 

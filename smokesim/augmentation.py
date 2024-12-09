@@ -94,6 +94,7 @@ class Augmentation:
     def augment_iter(
         self,
         steps: int,
+        time_step: float,
         image: Optional[np.ndarray],
         history_path: Optional[Path] = None,
     ):
@@ -121,8 +122,9 @@ class Augmentation:
                 self.image.get_size(),
             )
         for t in range(steps):
+            # print(t)
             self.screen.blit(self.image, (0, 0))
-            self.smoke_machine.update(time=t)
+            self.smoke_machine.update(time=time_step)
             self.smoke_machine.draw(self.screen)
 
             pygame.display.flip()
@@ -148,9 +150,9 @@ class Augmentation:
     def augment(
         self,
         steps: int = 2,
+        time_step: float = 30,
         image: Optional[np.ndarray] = None,
         history_path: Optional[Path] = None,
-        jump: bool = False,
     ) -> Tuple[np.ndarray, np.ndarray]:
         """
         A method to augment the image with smoke.
@@ -168,23 +170,8 @@ class Augmentation:
         if image is not None:
             self.image = pygame.surfarray.make_surface(image)
             self.image = pygame.transform.scale(self.image, self.screen_dim)
-        if jump:
-            self.screen.blit(self.image, (0, 0))
-            self.smoke_machine.update(time=steps)
-            self.smoke_machine.draw(self.screen)
-            pygame.display.flip()
-            rgb_array = pygame.surfarray.array3d(pygame.display.get_surface())
-
-            self.screen.blit(self.blank_image, (0, 0))
-            self.smoke_machine.draw(self.screen)
-            pygame.display.flip()
-            rgb_mask_array = pygame.surfarray.array3d(pygame.display.get_surface())
-            self.last_aug_img, self.last_aug_mask = cv2.rotate(
-                rgb_array, cv2.ROTATE_90_CLOCKWISE
-            ), cv2.rotate(rgb_mask_array, cv2.ROTATE_90_CLOCKWISE)
-            return self.last_aug_img, self.last_aug_mask
         for rgb_array, rgb_mask_array in self.augment_iter(
-            steps, image, history_path=history_path
+            steps, time_step, image, history_path=history_path
         ):
             pass
         if self.writer:
