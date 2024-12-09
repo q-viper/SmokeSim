@@ -42,7 +42,7 @@ class ParticleProperty(BaseProperty):
     - alpha (int, optional): The alpha of the particle. Defaults to 255.
     """
 
-    vx: Optional[float] = None
+    startvx: Optional[float] = None
     startvy: Optional[float] = None
     scale: Optional[float] = None
     lifetime: Optional[int] = None
@@ -60,6 +60,7 @@ class ParticleProperty(BaseProperty):
     fade_speed: int = 1
     alpha: int = 255
     # seed:int = 100
+    id: str = ""
 
 
 class Particle(BaseSim):
@@ -96,9 +97,9 @@ class Particle(BaseSim):
         self.property = property
         self.x = x
         self.y = y
-        self.vx = (
-            property.vx
-            if property.vx is not None
+        self.startvx = (
+            property.startvx
+            if property.startvx is not None
             else self.float_in_range(property.min_vx, property.max_vx)
         )
         self.startvy = (
@@ -122,6 +123,7 @@ class Particle(BaseSim):
         self.final_scale = self.float_in_range(self.scale * 0.1, self.scale * 1.5)
         self.scale_step = (self.final_scale - self.scale) / self.lifetime
         self.vy = self.startvy
+        self.vx = self.startvx
         self.alpha = property.alpha
         self.fade_speed = property.fade_speed
         self.is_alive = True
@@ -183,6 +185,7 @@ class Particle(BaseSim):
         self.y += self.vy * time
         frac = (self.age / self.lifetime) ** 0.5
         self.vy = (1 - frac) * self.startvy
+        self.vx = (1 - frac) * self.startvx
         self.scale += time * self.scale_step
         self.alpha -= self.fade_speed
         if self.alpha < 0 or self.age > self.lifetime or self.scale < 1:
@@ -208,8 +211,17 @@ class Particle(BaseSim):
         Args:
         - screen (pygame.Surface): The screen to draw the particle on.
         """
-        self.sprite_paint.set_alpha(self.alpha)
-        screen.blit(self.sprite_paint, (int(self.x), int(self.y)))
+        if self.is_alive:
+            self.sprite_paint.set_alpha(self.alpha)
+            screen.blit(self.sprite_paint, (int(self.x), int(self.y)))
+
+        if (
+            self.x < 0
+            or self.y < 0
+            or self.x > screen.get_width()
+            or self.y > screen.get_height()
+        ):
+            self.is_alive = False
 
     def __del__(self):
         try:

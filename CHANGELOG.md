@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## December 9, 2024
+### Added
+* Test for out of the bound and alive particles.
+
+### Changed
+* Particle state `is_alive` will be False when it is out of screen.
 
 ## June 28, 2024
 ### Added
