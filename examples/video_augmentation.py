@@ -9,7 +9,7 @@ if __name__ == "__main__":
 
     RUN_LIVE = False
     WIDTH, HEIGHT = 700, 500
-    MAKE_SMOKE_EVERY = 10
+    MAKE_SMOKE_EVERY = 2
     OUTPUT_PATH = Path("media/smoke_video.mp4")  # set None to disable output
 
     video_path = Path("media/vid.mp4")
@@ -63,7 +63,7 @@ if __name__ == "__main__":
                     augmentation.add_smoke(
                         dict(
                             color=augmentation.smoke_machine.color,
-                            particle_count=5,
+                            particle_count=1,
                             origin=(
                                 (
                                     np.random.randint(100, WIDTH),
@@ -74,7 +74,7 @@ if __name__ == "__main__":
                             ),
                             lifetime=5000,
                             particle_args={
-                                "min_lifetime": 500,
+                                "min_lifetime": 100,
                                 "max_lifetime": 1000,
                                 "min_scale": 10,
                                 "max_scale": 50,
@@ -87,7 +87,8 @@ if __name__ == "__main__":
                     )
 
                 smoked_array, mask = augmentation.augment(
-                    steps=30, image=screen_frame, jump=True
+                    steps=1,
+                    image=screen_frame,
                 )
                 if OUTPUT_PATH:
                     out.write(smoked_array)
