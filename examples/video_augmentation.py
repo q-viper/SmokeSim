@@ -9,10 +9,10 @@ if __name__ == "__main__":
 
     RUN_LIVE = False
     WIDTH, HEIGHT = 700, 500
-    MAKE_SMOKE_EVERY = 2
+    MAKE_SMOKE_EVERY = 1
     OUTPUT_PATH = Path("media/smoke_video.mp4")  # set None to disable output
 
-    video_path = Path("media/vid.mp4")
+    video_path = Path("media/hello.mp4")
     augmentation = Augmentation(image_path=None, screen_dim=(WIDTH, HEIGHT))
 
     mp_hands = mp.solutions.hands
@@ -26,10 +26,10 @@ if __name__ == "__main__":
         cap = cv2.VideoCapture(str(video_path))
     if OUTPUT_PATH:
         fourcc = cv2.VideoWriter_fourcc(*"X264")
-        out = cv2.VideoWriter(str(OUTPUT_PATH), fourcc, 20.0, (WIDTH, HEIGHT))
+        out = cv2.VideoWriter(str(OUTPUT_PATH), fourcc, 15.0, (WIDTH, HEIGHT))
     fno = 0
     with mp_hands.Hands(
-        max_num_hands=1, min_detection_confidence=0.9, min_tracking_confidence=0.9
+        max_num_hands=1, min_detection_confidence=0.5, min_tracking_confidence=0.5
     ) as hands:
         while True:
             fno += 1
@@ -59,7 +59,7 @@ if __name__ == "__main__":
 
                         cv2.circle(screen_frame, (x, y), 10, (0, 255, 0), -1)
 
-                if fno % MAKE_SMOKE_EVERY == 0:
+                if x is not None and y is not None:
                     augmentation.add_smoke(
                         dict(
                             color=augmentation.smoke_machine.color,
@@ -74,13 +74,13 @@ if __name__ == "__main__":
                             ),
                             lifetime=5000,
                             particle_args={
-                                "min_lifetime": 100,
-                                "max_lifetime": 1000,
-                                "min_scale": 10,
-                                "max_scale": 50,
-                                "fade_speed": 1,
-                                "scale": 25,
-                                "smoke_sprite_size": 25,
+                                "min_lifetime": 10,
+                                "max_lifetime": 100,
+                                "min_scale": 5,
+                                "max_scale": 20,
+                                "fade_speed": 2,
+                                "scale": 10,
+                                "smoke_sprite_size": 15,
                                 "color": augmentation.smoke_machine.color,
                             },
                         )
