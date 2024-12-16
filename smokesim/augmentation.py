@@ -165,7 +165,8 @@ class Augmentation:
 
         Returns:
         ----------------
-        - np.ndarray: The augmented image.
+        - np.ndarray: The smoke overlayed image.
+        - np.ndarray: The smoke only image.
         """
         if image is not None:
             self.image = pygame.surfarray.make_surface(image)

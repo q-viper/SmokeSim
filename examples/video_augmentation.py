@@ -86,9 +86,7 @@ if __name__ == "__main__":
                         )
                     )
 
-                smoked_array, mask = augmentation.augment(
-                    steps=30, image=screen_frame, jump=True
-                )
+                smoked_array, mask = augmentation.augment(steps=30, image=screen_frame)
                 if OUTPUT_PATH:
                     out.write(smoked_array)
                 cv2.imshow("Orig Frame", frame)

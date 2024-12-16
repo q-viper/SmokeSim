@@ -51,8 +51,11 @@ class ParticleProperty(BaseProperty):
     max_vx: float = 4 / 100
     min_vy: float = -4 / 10
     max_vy: float = -1 / 10
+    # select random scale between min_scale and max_scale
     min_scale: int = 20
     max_scale: int = 40
+    # select a final scale between 0.1 and 1.5 times the initial scale
+    scale_range: Tuple[int, int] = (0.01, 1.5)
     min_lifetime: float = 2000
     max_lifetime: float = 8000
     color: Tuple[float, float, float] = (24, 46, 48)
@@ -110,7 +113,7 @@ class Particle(BaseSim):
         self.scale = (
             property.smoke_sprite_size
             if property.scale is not None
-            else self.float_in_range(property.min_scale, property.max_scale)
+            else int(self.float_in_range(property.min_scale, property.max_scale))
         )
         self.lifetime = (
             property.lifetime
@@ -120,7 +123,9 @@ class Particle(BaseSim):
         self.age = property.age
         self.color = property.color
         self.smoke_sprite_size = property.smoke_sprite_size
-        self.final_scale = self.float_in_range(self.scale * 0.1, self.scale * 1.5)
+        self.final_scale = self.float_in_range(
+            self.scale * property.scale_range[0], self.scale * property.scale_range[1]
+        )
         self.scale_step = (self.final_scale - self.scale) / self.lifetime
         self.vy = self.startvy
         self.vx = self.startvx
@@ -128,6 +133,10 @@ class Particle(BaseSim):
         self.fade_speed = property.fade_speed
         self.is_alive = True
         self.sprite_paint = self.make_sprite()
+
+    @property
+    def position(self):
+        return (self.x, self.y)
 
     def paint_sprite(self, sprite: Sprite) -> pygame.Surface:
         """
@@ -150,9 +159,9 @@ class Particle(BaseSim):
             for y in range(sprite.height):
                 pixels[x, y] = (*sprite.color, opacities[x, y])
         del pixels
-        surface = pygame.transform.smoothscale(
-            surface, (sprite.width // 2, sprite.height // 2)
-        )
+        # surface = pygame.transform.smoothscale(
+        #     surface, (sprite.width // 2, sprite.height // 2)
+        # )
         surface = pygame.transform.smoothscale(surface, (sprite.width, sprite.height))
         self.surface = surface
         return surface
@@ -166,8 +175,8 @@ class Particle(BaseSim):
         """
         self.sprite = Sprite(
             color=self.color,
-            width=self.smoke_sprite_size,
-            height=self.smoke_sprite_size,
+            width=self.scale,
+            height=self.scale,
         )
         self.sprite_paint = self.paint_sprite(self.sprite)
         return self.sprite_paint
@@ -183,26 +192,36 @@ class Particle(BaseSim):
         self.age += time
         self.x += self.vx * time
         self.y += self.vy * time
-        frac = (self.age / self.lifetime) ** 0.5
+        frac = self.age / self.lifetime
+        frac = frac**0.5
         self.vy = (1 - frac) * self.startvy
         self.vx = (1 - frac) * self.startvx
-        self.scale += time * self.scale_step
-        self.alpha -= self.fade_speed
-        if self.alpha < 0 or self.age > self.lifetime or self.scale < 1:
-            self.is_alive = False
-        if self.scale > 1:
-            self.sprite.width = int(self.scale)
-            self.sprite.height = int(self.scale)
-            if self.sprite.width < 1 or self.sprite.height < 1:
-                self.is_alive = False
+        scale_frac = self.age * self.scale_step
 
-            surface = pygame.transform.smoothscale(
-                self.surface, (self.sprite.width // 2, self.sprite.height // 2)
-            )
-            surface = pygame.transform.smoothscale(
-                self.surface, (self.sprite.width, self.sprite.height)
-            )
-            self.sprite_paint = surface
+        height = self.scale + scale_frac
+        width = self.scale + scale_frac
+        self.alpha -= self.fade_speed
+
+        if (
+            (self.alpha < 0)
+            or (self.age > self.lifetime)
+            or (self.scale < 1)
+            or (height < 0)
+            or (width < 0)
+        ):
+            self.is_alive = False
+            return None
+        # if self.scale > :
+        # self.sprite.width = int(self.smoke_sprite_size * self.scale)
+        # self.sprite.height = int(self.smoke_sprite_size * self.scale)
+        # if self.sprite.width < 1 or self.sprite.height < 1:
+        #     self.is_alive = False
+
+        # surface = pygame.transform.smoothscale(
+        #     self.surface, (self.sprite.width // 2, self.sprite.height // 2)
+        # )
+        surface = pygame.transform.smoothscale(self.surface, (height, width))
+        self.sprite_paint = surface
 
     def draw(self, screen):
         """

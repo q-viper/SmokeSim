@@ -53,7 +53,7 @@ def test_position():
             particle_count=1,
             sprite_size=25,
             origin=(50, 50),
-            particle_args=dict(lifetime=100, startvy=5),
+            particle_args=dict(lifetime=1000, startvy=5),
         )
     )
     augmentation.augment(2, time_step=50)
