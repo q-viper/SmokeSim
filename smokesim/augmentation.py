@@ -1,4 +1,5 @@
 from smokesim.smoke import SmokeMachine
+from smokesim.engine import EngineTypes, Engine
 
 import pygame
 from typing import Optional, Tuple
@@ -14,11 +15,25 @@ class Augmentation:
         screen_dim: Tuple[int, int] = (500, 700),
         smoke_machine: Optional[SmokeMachine] = None,
         random_seed: int = 100,
+        engine_type: EngineTypes = EngineTypes.PYGAME,
     ):
+        """
+        Initialize the Augmentation class.
+
+        Args:
+        - image_path (Optional[Path], optional): The path to the image. Defaults to Path('assets/me.jpg').
+        - screen_dim (Tuple[int, int], optional): The screen dimensions. Defaults to (500, 700).
+        - smoke_machine (Optional[SmokeMachine], optional): The smoke machine. Defaults to None.
+        - random_seed (int, optional): The random seed. Defaults to 100.
+        - engine_type (EngineTypes, optional): The engine type. Defaults to EngineTypes.PYGAME.
+
+        """
 
         self.image_path = image_path
         self.image = None
         self.screen_dim = screen_dim
+        self.engine_type = engine_type
+        self.engine = Engine(engine_type)
         self.read_image(image_path)
 
         self.screen = smoke_machine.screen if smoke_machine else self.make_screen()
@@ -54,7 +69,10 @@ class Augmentation:
 
         if image_path is not None:
             self.image = pygame.image.load(str(image_path))
-        else:
+            if not image_path.exists():
+                Warning("No image path provided. Creating a blank image.")
+                image_path = None
+        if image_path is None:
             self.image = np.zeros((self.screen_dim[0], self.screen_dim[1], 3))
 
             self.image = pygame.surfarray.make_surface(self.image)
@@ -103,6 +121,7 @@ class Augmentation:
 
         Args:
         - steps (int): The number of steps to augment the image.
+        - time_step (float): The time step to augment the image.
         - image (Optional[np.ndarray]): The image to augment.
         - history_path (Path): The path to save the history.
 
@@ -124,7 +143,7 @@ class Augmentation:
         for t in range(steps):
             # print(t)
             self.screen.blit(self.image, (0, 0))
-            self.smoke_machine.update(time=time_step)
+            self.smoke_machine.update(time_step=time_step)
             self.smoke_machine.draw(self.screen)
 
             pygame.display.flip()
@@ -160,12 +179,13 @@ class Augmentation:
         Args:
         ----------------
         - steps (int, optional): The number of steps to augment the image. Defaults to 2.
+        - time_step (float, optional): The time step to augment the image. Defaults to 30.
         - image (Optional[np.ndarray], optional): The image to augment. Defaults to None.
-        - jump (bool, optional): A flag to jump to the final image. Defaults to False.
 
         Returns:
         ----------------
-        - np.ndarray: The augmented image.
+        - np.ndarray: The smoke overlayed image.
+        - np.ndarray: The smoke only image.
         """
         if image is not None:
             self.image = pygame.surfarray.make_surface(image)

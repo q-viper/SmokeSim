@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## December 17, 2024
+### Changed
+* Worked on Issues: [#7](https://github.com/q-viper/SmokeSim/issues/7), [#8](https://github.com/q-viper/SmokeSim/issues/8), [#9](https://github.com/q-viper/SmokeSim/issues/9), [#11](https://github.com/q-viper/SmokeSim/issues/11).
+
 ## December 9, 2024
 ### Added
 * Test for out of the bound and alive particles.

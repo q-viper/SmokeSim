@@ -4,7 +4,6 @@ import pygame
 
 from smokesim.base import BaseProperty, BaseSim
 from smokesim.particle import Particle, ParticleProperty
-import time
 
 
 class SmokeProperty(BaseProperty):
@@ -82,17 +81,17 @@ class Smoke(BaseSim):
             # print(p, particle_id)
         self.particles.extend(particles)
 
-    def update(self, time: float = 30):
+    def update(self, time_step: float = 30):
         """
         A method to update the smoke.
 
         Args:
-        - time (float, optional): The time to update the smoke by. Defaults to 30.
+        - time_step (float, optional): The time_step to update the smoke by. Defaults to 30.
         """
-        self.age += time
+        self.age += time_step
         new_particles = []
         for particle in self.particles:
-            particle.update(time)
+            particle.update(time_step)
             if particle.is_alive:
                 # particle.draw(self.screen)
                 new_particles.append(particle)
@@ -137,7 +136,7 @@ class SmokeMachine:
         self.sprite_size = default_sprite_size
         self.particle_count = default_particle_count
         self.screen = screen
-        self.time = 0
+        self.time_step = 0
         self.smokes: List[Smoke] = []
         self.last_smoke_id = -1
         self.random_seed = random_seed
@@ -195,17 +194,17 @@ class SmokeMachine:
             del s
         self.smokes = []
 
-    def update(self, time: float = 30):
+    def update(self, time_step: float = 30):
         """
         A method to update the smoke machine.
 
         Args:
-        - time (float, optional): The time to update the smoke machine by. Defaults to 30.
+        - time_step (float, optional): The time_step to update the smoke machine by. Defaults to 30.
         """
-        self.time += time
+        self.time_step += time_step
         new_smokes = []
         for smoke in self.smokes:
-            smoke.update(time)
+            smoke.update(time_step)
             if smoke.age > smoke.lifetime and smoke.lifetime > 0:
                 for p in smoke.particles:
                     p.age = p.lifetime
