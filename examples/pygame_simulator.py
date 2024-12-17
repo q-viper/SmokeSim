@@ -386,4 +386,5 @@ def main():
     print(f"Ran for {steps} iterations")
 
 
-main()
+if __name__ == "__main__":
+    main()
