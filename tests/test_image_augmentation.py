@@ -21,33 +21,55 @@ def setup_augmentation(
     augmentation = Augmentation(
         image_path=None, screen_dim=(width, height), random_seed=seed
     )
-
     smoke_machine = augmentation.smoke_machine
 
     # Add some smoke particles
     logging.info("Adding initial smoke particles.")
-    augmentation.add_smoke(dict(particle_count=15, sprite_size=25, origin=(250, 500)))
-    augmentation.add_smoke(dict(particle_count=15, sprite_size=25, origin=(450, 500)))
+    augmentation.add_smoke(
+        dict(
+            particle_count=15,
+            lifetime=2000,
+            sprite_size=25,
+            origin=(250, 500),
+            particle_args={
+                "min_lifetime": 200,
+                "max_lifetime": 1000,
+                "min_scale": 10,
+                "max_scale": 50,
+                "fade_speed": 2,
+                "scale": 50,
+                "smoke_sprite_size": 50,
+                "min_vx": -2,
+                "max_vx": 2,
+                "color": smoke_machine.color,
+            },
+        )
+    )
+    augmentation.add_smoke(
+        dict(particle_count=15, lifetime=2000, sprite_size=25, origin=(450, 500))
+    )
 
     # Add random smoke particles
     for _ in range(5):
         augmentation.add_smoke(
             dict(
                 color=smoke_machine.color,
-                particle_count=1,
+                particle_count=10,
                 origin=(
                     random_state.randint(100, width),
                     random_state.randint(100, height),
                 ),
-                lifetime=200,
+                lifetime=2000,
                 particle_args={
                     "min_lifetime": 200,
-                    "max_lifetime": 500,
+                    "max_lifetime": 1000,
                     "min_scale": 10,
                     "max_scale": 50,
-                    "fade_speed": 50,
+                    "fade_speed": 2,
                     "scale": 50,
                     "smoke_sprite_size": 50,
+                    "min_vx": -2,
+                    "max_vx": 2,
                     "color": smoke_machine.color,
                 },
             )
@@ -58,7 +80,7 @@ def setup_augmentation(
 
 
 # Helper function to run augmentation and return final image and mask
-def run_augmentation(augmentation: Augmentation, steps: int = 90):
+def run_augmentation(augmentation: Augmentation, steps: int = 15):
     logging.info(f"Running augmentation for {steps} steps.")
     final_image, final_mask = augmentation.augment(steps=steps)
     logging.info("Augmentation complete.")
@@ -79,19 +101,18 @@ def validate_images_and_masks(
 
 def test_augmentation():
     WIDTH, HEIGHT = 700, 500
-    random_state = np.random.RandomState(42)
 
     # Test 1: Same Seed for Augmentation
     logging.info(
         "Test 1: Running augmentation with the same seed for two augmentations."
     )
     augmentation1 = setup_augmentation(
-        seed=42, width=WIDTH, height=HEIGHT, random_state=random_state
+        seed=42, width=WIDTH, height=HEIGHT, random_state=np.random.RandomState(42)
     )
     final_image1, final_mask1 = run_augmentation(augmentation1)
 
     augmentation2 = setup_augmentation(
-        seed=42, width=WIDTH, height=HEIGHT, random_state=random_state
+        seed=42, width=WIDTH, height=HEIGHT, random_state=np.random.RandomState(42)
     )
     final_image2, final_mask2 = run_augmentation(augmentation2)
 
@@ -101,7 +122,7 @@ def test_augmentation():
     # Test 2: Different Seed for Augmentation
     logging.info("Test 2: Running augmentation with different seed.")
     augmentation3 = setup_augmentation(
-        seed=50, width=WIDTH, height=HEIGHT, random_state=random_state
+        seed=50, width=WIDTH, height=HEIGHT, random_state=np.random.RandomState(42)
     )
     final_image3, final_mask3 = run_augmentation(augmentation3)
 
@@ -128,6 +149,6 @@ def test_augmentation():
 if __name__ == "__main__":
     # Run the test with pytest for better integration
     logging.info("Starting test execution.")
-    pytest.main()
-    # test_augmentation()
+    # pytest.main()
+    test_augmentation()
     logging.info("Test execution complete.")

@@ -54,7 +54,10 @@ class Augmentation:
 
         if image_path is not None:
             self.image = pygame.image.load(str(image_path))
-        else:
+            if not image_path.exists():
+                Warning("No image path provided. Creating a blank image.")
+                image_path = None
+        if image_path is None:
             self.image = np.zeros((self.screen_dim[0], self.screen_dim[1], 3))
 
             self.image = pygame.surfarray.make_surface(self.image)
@@ -124,7 +127,7 @@ class Augmentation:
         for t in range(steps):
             # print(t)
             self.screen.blit(self.image, (0, 0))
-            self.smoke_machine.update(time=time_step)
+            self.smoke_machine.update(time_step=time_step)
             self.smoke_machine.draw(self.screen)
 
             pygame.display.flip()

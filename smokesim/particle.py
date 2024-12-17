@@ -181,17 +181,17 @@ class Particle(BaseSim):
         self.sprite_paint = self.paint_sprite(self.sprite)
         return self.sprite_paint
 
-    def update(self, time: float = 1):
+    def update(self, time_step: float = 1):
         """
         A method to update the particle.
 
         Args:
-        - time (float, optional): The time to update the particle by. Defaults to 1.
+        - time_step (float, optional): The time_step to update the particle by. Defaults to 1.
 
         """
-        self.age += time
-        self.x += self.vx * time
-        self.y += self.vy * time
+        self.age += time_step
+        self.x += self.vx * time_step
+        self.y += self.vy * time_step
         frac = self.age / self.lifetime
         frac = frac**0.5
         self.vy = (1 - frac) * self.startvy
