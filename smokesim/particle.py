@@ -17,6 +17,9 @@ class Sprite(BaseProperty):
     opacity_mask: np.ndarray = CLOUD_MASK
     color: tuple = (255, 255, 255)
 
+    class Config:
+        arbitrary_types_allowed = True
+
 
 class ParticleProperty(BaseProperty):
     """

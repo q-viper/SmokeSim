@@ -106,6 +106,7 @@ class Augmentation:
 
         Args:
         - steps (int): The number of steps to augment the image.
+        - time_step (float): The time step to augment the image.
         - image (Optional[np.ndarray]): The image to augment.
         - history_path (Path): The path to save the history.
 
@@ -163,8 +164,8 @@ class Augmentation:
         Args:
         ----------------
         - steps (int, optional): The number of steps to augment the image. Defaults to 2.
+        - time_step (float, optional): The time step to augment the image. Defaults to 30.
         - image (Optional[np.ndarray], optional): The image to augment. Defaults to None.
-        - jump (bool, optional): A flag to jump to the final image. Defaults to False.
 
         Returns:
         ----------------

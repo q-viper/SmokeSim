@@ -149,6 +149,6 @@ def test_augmentation():
 if __name__ == "__main__":
     # Run the test with pytest for better integration
     logging.info("Starting test execution.")
-    # pytest.main()
-    test_augmentation()
+    pytest.main()
+    # test_augmentation()
     logging.info("Test execution complete.")
