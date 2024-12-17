@@ -1,4 +1,5 @@
 from smokesim.smoke import SmokeMachine
+from smokesim.engine import EngineTypes, Engine
 
 import pygame
 from typing import Optional, Tuple
@@ -14,11 +15,25 @@ class Augmentation:
         screen_dim: Tuple[int, int] = (500, 700),
         smoke_machine: Optional[SmokeMachine] = None,
         random_seed: int = 100,
+        engine_type: EngineTypes = EngineTypes.PYGAME,
     ):
+        """
+        Initialize the Augmentation class.
+
+        Args:
+        - image_path (Optional[Path], optional): The path to the image. Defaults to Path('assets/me.jpg').
+        - screen_dim (Tuple[int, int], optional): The screen dimensions. Defaults to (500, 700).
+        - smoke_machine (Optional[SmokeMachine], optional): The smoke machine. Defaults to None.
+        - random_seed (int, optional): The random seed. Defaults to 100.
+        - engine_type (EngineTypes, optional): The engine type. Defaults to EngineTypes.PYGAME.
+
+        """
 
         self.image_path = image_path
         self.image = None
         self.screen_dim = screen_dim
+        self.engine_type = engine_type
+        self.engine = Engine(engine_type)
         self.read_image(image_path)
 
         self.screen = smoke_machine.screen if smoke_machine else self.make_screen()
