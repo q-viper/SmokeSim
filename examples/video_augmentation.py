@@ -10,9 +10,12 @@ if __name__ == "__main__":
     RUN_LIVE = False
     WIDTH, HEIGHT = 700, 500
     MAKE_SMOKE_EVERY = 10
-    OUTPUT_PATH = Path("media/smoke_video.mp4")  # set None to disable output
+    PROJECT_ROOT = Path(__file__).resolve().parent.parent
+    OUTPUT_PATH = PROJECT_ROOT / Path(
+        "media/smoke_video.mp4"
+    )  # set None to disable output
 
-    video_path = Path("media/vid.mp4")
+    video_path = PROJECT_ROOT / Path("media/vid.mp4")
     augmentation = Augmentation(image_path=None, screen_dim=(WIDTH, HEIGHT))
 
     mp_hands = mp.solutions.hands

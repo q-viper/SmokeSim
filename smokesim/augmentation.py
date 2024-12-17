@@ -85,7 +85,6 @@ class Augmentation:
         )
         blank_image.set_alpha(255)
         self.blank_image = pygame.transform.scale(blank_image, self.screen_dim)
-
         return self
 
     def make_screen(self) -> pygame.Surface:
@@ -113,7 +112,7 @@ class Augmentation:
         self,
         steps: int,
         time_step: float,
-        image: Optional[np.ndarray],
+        image: Optional[np.ndarray] = None,
         history_path: Optional[Path] = None,
     ):
         """

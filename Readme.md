@@ -66,7 +66,7 @@ This demo showcases real-time smoke effects on a web-based canvas:
 1. Clone this repository.
 2. Start a local HTTP server in the project directory to avoid CORS errors. For example:
    ```bash
-   python server.py
+   python examples/server.py
    ```
 (This uses [`examples/server.py`](examples/server.py) adapted from this [gist](https://gist.github.com/acdha/925e9ffc3d74ad59c3ea#file-simple_cors_server-py).) 
 3. Navigate to http://localhost:8003/js_demo/index.html.
@@ -154,7 +154,6 @@ if __name__ == "__main__":
 * Add collision effect between particles.
 * Add wind effect.
 * Try to add smoother transition.
-* Make it faster. Currently I am not deleting particles that are out for the scene. 
 
 ## Collaborating
 If you find this project to be interesting and want to add changes, please add your changes and make the push request. Or you can make an issue for that.
