@@ -9,8 +9,9 @@ class CORSRequestHandler(SimpleHTTPRequestHandler):
         return super(CORSRequestHandler, self).end_headers()
 
 
-host = "localhost"
-port = 8003
-httpd = HTTPServer((host, port), CORSRequestHandler)
-print(f"Server started at http://{host}:{port}")
-httpd.serve_forever()
+if __name__ == "__main__":
+    host = "localhost"
+    port = 8003
+    httpd = HTTPServer((host, port), CORSRequestHandler)
+    print(f"Server started at http://{host}:{port}")
+    httpd.serve_forever()
