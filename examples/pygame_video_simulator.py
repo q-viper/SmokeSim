@@ -27,18 +27,25 @@ def next_frame(cap, HEIGHT, WIDTH):
 def main():
     pygame.init()
     pygame.display.set_caption("Smoke Simulator")
-    video_path = Path("media/vid.mp4")
+    project_root = Path(__file__).resolve().parent.parent
+    print(project_root)
+    video_path = project_root / Path("media/vid.mp4")
     WIDTH, HEIGHT = 1000, 700
-    save_dir = Path(r"\assets\generated")
+    save_dir = project_root / Path("assets/generated")
 
     if not video_path.exists():
         raise ValueError(f"{video_path} not found.")
     else:
         cap = cv2.VideoCapture(str(video_path))
         bg, frame = next_frame(cap, HEIGHT, WIDTH)
+    if not save_dir.exists():
+        save_dir.mkdir()
 
     container_wh = (WIDTH, 150)
-    screen = pygame.display.set_mode((WIDTH, HEIGHT + container_wh[1]))
+    screen = pygame.display.set_mode(
+        (WIDTH, HEIGHT + container_wh[1]), pygame.RESIZABLE
+    )
+    # screen = pygame.display.set_mode((0, 0), pygame.RESIZABLE)
     bg = pygame.transform.scale(bg, (WIDTH, HEIGHT))
     screen.blit(bg, (0, container_wh[1]))
 
