@@ -18,4 +18,15 @@ setup(
     author_email="qramkrishna@gmail.com",
     description="A package for doing smoke simulation.",
     url="https://github.com/q-viper/SmokeSim",
+    keywords=["smoke", "simulation"],
+    classifiers=[
+        "License :: OSI Approved :: Apache Software License",
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Development Status :: 4 - Beta",
+        "Intended Audience :: Developers",
+        "Topic :: Software Development :: Libraries :: Python Modules",
+    ],
+  download_url = 'https://github.com/q-viper/SmokeSim/archive/refs/tags/v0.0.1.tar.gz',
 )
