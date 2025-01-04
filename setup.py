@@ -28,5 +28,5 @@ setup(
         "Intended Audience :: Developers",
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
-  download_url = 'https://github.com/q-viper/SmokeSim/archive/refs/tags/v0.0.1.tar.gz',
+    download_url="https://github.com/q-viper/SmokeSim/archive/refs/tags/v0.0.1.tar.gz",
 )
