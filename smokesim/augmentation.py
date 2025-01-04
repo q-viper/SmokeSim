@@ -147,7 +147,7 @@ class Augmentation:
 
             pygame.display.flip()
             rgb_array = pygame.surfarray.array3d(pygame.display.get_surface())
-            
+
             self.screen.blit(self.blank_image, (0, 0))
             self.smoke_machine.draw(self.screen)
 
@@ -161,7 +161,6 @@ class Augmentation:
                         cv2.COLOR_RGB2BGR,
                     )
                 )
-
 
             yield cv2.rotate(rgb_array, cv2.ROTATE_90_CLOCKWISE), rotated_rgb_mask_array
 
