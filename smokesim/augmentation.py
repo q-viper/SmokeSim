@@ -147,23 +147,23 @@ class Augmentation:
 
             pygame.display.flip()
             rgb_array = pygame.surfarray.array3d(pygame.display.get_surface())
-            if self.writer:
-                self.writer.write(
-                    cv2.cvtColor(
-                        cv2.rotate(rgb_array, cv2.ROTATE_90_CLOCKWISE),
-                        cv2.COLOR_RGB2BGR,
-                    )
-                )
-
+            
             self.screen.blit(self.blank_image, (0, 0))
             self.smoke_machine.draw(self.screen)
 
             pygame.display.flip()
             rgb_mask_array = pygame.surfarray.array3d(pygame.display.get_surface())
+            rotated_rgb_mask_array = cv2.rotate(rgb_mask_array, cv2.ROTATE_90_CLOCKWISE)
+            if self.writer:
+                self.writer.write(
+                    cv2.cvtColor(
+                        rotated_rgb_mask_array,
+                        cv2.COLOR_RGB2BGR,
+                    )
+                )
 
-            yield cv2.rotate(rgb_array, cv2.ROTATE_90_CLOCKWISE), cv2.rotate(
-                rgb_mask_array, cv2.ROTATE_90_CLOCKWISE
-            )
+
+            yield cv2.rotate(rgb_array, cv2.ROTATE_90_CLOCKWISE), rotated_rgb_mask_array
 
     def augment(
         self,
