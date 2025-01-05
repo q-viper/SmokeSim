@@ -47,9 +47,13 @@ This project is an educational exploration, and I am not an expert in JavaScript
 </details>
 
 ## Installation
+### Developing
 1. `git clone https://github.com/q-viper/SmokeSim.git`
 2. `cd SmokeSim`
 2. `pip install .`
+
+### PyPi
+`pip install smokesim`
 
 Please make an issue if it failed.
 
