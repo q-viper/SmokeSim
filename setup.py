@@ -17,7 +17,7 @@ setup(
     author="Ramkrishna Acharya(QViper)",
     author_email="qramkrishna@gmail.com",
     description="A package for doing smoke simulation.",
-    long_description=open("README.md").read(),
+    long_description=open("Readme.md").read(),
     long_description_content_type="text/markdown",
     url="https://github.com/q-viper/SmokeSim",
     keywords=["smoke", "simulation"],
