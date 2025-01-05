@@ -17,6 +17,8 @@ setup(
     author="Ramkrishna Acharya(QViper)",
     author_email="qramkrishna@gmail.com",
     description="A package for doing smoke simulation.",
+    long_description=open("README.md").read(),
+    long_description_content_type="text/markdown",
     url="https://github.com/q-viper/SmokeSim",
     keywords=["smoke", "simulation"],
     classifiers=[
@@ -29,5 +31,6 @@ setup(
         "Intended Audience :: Developers",
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
-    download_url="https://github.com/q-viper/SmokeSim/archive/refs/tags/v0.0.1.tar.gz",
+    download_url="https://github.com/q-viper/SmokeSim/archive/refs/tags/v0.0.2.tar.gz",
+    homepage='https://q-viper.github.io/SmokeSim/'
 )
