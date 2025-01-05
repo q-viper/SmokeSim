@@ -3,7 +3,7 @@ from setuptools import setup
 # setup for gradls
 setup(
     name="smokesim",
-    version="0.0.2",
+    version="0.0.21",
     packages=["smokesim"],
     install_requires=[
         "numpy",
@@ -32,5 +32,5 @@ setup(
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
     download_url="https://github.com/q-viper/SmokeSim/archive/refs/tags/v0.0.2.tar.gz",
-    homepage='https://q-viper.github.io/SmokeSim/'
+    homepage="https://q-viper.github.io/SmokeSim/",
 )
