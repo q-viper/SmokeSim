@@ -1,49 +1,23 @@
-from typing import List, Optional, Tuple
+from typing import Tuple, List, Optional
 
-import pygame
-
-from smokesim.base import BaseProperty, BaseSim
-from smokesim.particle import Particle, ParticleProperty
-
-
-class SmokeProperty(BaseProperty):
-    """
-    A dataclass to represent the arguments for a smoke.
-
-    - origin (Tuple[int, int], optional): The origin of the smoke. Defaults to (100, 100).
-    - particle_count (int, optional): The number of particles in the smoke. Defaults to 100.
-    - color (Tuple[int, int, int], optional): The color of the smoke. Defaults to (167, 167, 167).
-    - particle_args (dict, optional): Arguments to pass to the Particle class. Defaults to {}.
-    - sprite_size (int, optional): The size of the sprite. Defaults to 20.
-    - lifetime (int, optional): The lifetime of the smoke. Defaults to -1.
-    - age (int, optional): The age of the smoke. Defaults to 0.
-    - id (int, optional): The id of the smoke. Defaults to 0.
-    """
-
-    origin: Tuple[int, int] = (100, 100)
-    particle_count: int = 100
-    color: Tuple[int, int, int] = (24, 46, 48)
-    particle_property: Optional[ParticleProperty] = ParticleProperty()
-    sprite_size: int = 20
-    lifetime: int = -1
-    age: int = 0
-    id: int = 0
+from smokesim.particle import Particle
+from smokesim.defs import Sprite, ParticleProperty, SmokeProperty
+from smokesim.base import BaseSim
+from smokesim.engine import EngineTypes, Engine
 
 
 class Smoke(BaseSim):
-    def __init__(self, screen: pygame.Surface, smoke_property: SmokeProperty):
+    def __init__(self, smoke_property: SmokeProperty):
         """
         Class to represent a smoke object. Smoke is made up of particles.
 
         Args:
-        - screen (pygame.Surface): The screen to draw the smoke on.
         - smoke_property (SmokeProperty): The properties of the smoke.
 
         """
         super().__init__(smoke_property)
         self.origin = smoke_property.origin
         self.id = smoke_property.id
-        self.screen = screen
         self.particle_count = smoke_property.particle_count
         self.color = smoke_property.color
         self.sprite_size = smoke_property.sprite_size
@@ -78,7 +52,6 @@ class Smoke(BaseSim):
 
             particles.append(particle)
             self.particles_until_now += 1
-            # print(p, particle_id)
         self.particles.extend(particles)
 
     def update(self, time_step: float = 30):
@@ -93,7 +66,6 @@ class Smoke(BaseSim):
         for particle in self.particles:
             particle.update(time_step)
             if particle.is_alive:
-                # particle.draw(self.screen)
                 new_particles.append(particle)
             else:
                 del particle
@@ -103,18 +75,12 @@ class Smoke(BaseSim):
             self.particles = []
         else:
             self.create_particles(self.particle_property)
-        # print(f"ID: {self.id}, Num particles: {len(self.particles)}")
-
-    def draw(self, screen: Optional[pygame.Surface] = None):
-        screen = screen if screen else self.screen
-        for particle in self.particles:
-            particle.draw(screen)
 
 
 class SmokeMachine:
     def __init__(
         self,
-        screen: pygame.Surface,
+        engine_type: EngineTypes = EngineTypes.PYGAME,
         default_particle_count: int = 100,
         default_color: Tuple[int, int, int] = (24, 46, 48),
         default_sprite_size: int = 20,
@@ -122,26 +88,16 @@ class SmokeMachine:
         versbose: bool = False,
         auto_draw: bool = True,
     ):
-        """
-        A class to represent a smoke machine. The smoke machine creates and manages smoke objects.
-
-        Args:
-        - screen (pygame.Surface): The screen to draw the smoke on.
-        - default_particle_count (int, optional): The default number of particles in the smoke. Defaults to 100.
-        - default_color (Tuple[int, int, int], optional): The default color of the smoke. Defaults to (167, 167, 167).
-        - default_sprite_size (int, optional): The default size of the sprite. Defaults to 20.
-
-        """
+        self.engine_type = engine_type
         self.color = default_color
         self.sprite_size = default_sprite_size
         self.particle_count = default_particle_count
-        self.screen = screen
         self.time_step = 0
         self.smokes: List[Smoke] = []
         self.last_smoke_id = -1
         self.random_seed = random_seed
         self.verbose = versbose
-        self.auto_draw = auto_draw
+        self.default_sprite = None
 
     def add_smoke(self, args: dict):
         """
@@ -174,7 +130,7 @@ class SmokeMachine:
         else:
             args["particle_property"] = ParticleProperty(random_seed=self.random_seed)
         smoke_property = SmokeProperty(**args)
-        smoke = Smoke(self.screen, smoke_property)
+        smoke = Smoke(smoke_property)
         self.smokes.append(smoke)
         self.last_smoke_id += 1
         if self.verbose:
@@ -214,16 +170,81 @@ class SmokeMachine:
                 new_smokes.append(smoke)
         self.smokes = new_smokes
 
-        if self.auto_draw:
-            self.draw()
-
-    def draw(self, screen: Optional[pygame.Surface] = None):
+    def draw(self, screen, engine: Engine):
         """
         A method to draw the smoke machine.
 
         Args:
-        - screen (Optional[pygame.Surface], optional): The screen to draw the smoke machine on. Defaults to None.
+        - screen: The screen to draw the smoke machine on.
+        - engine: The engine instance to handle rendering.
         """
-        screen = screen if screen else self.screen
         for smoke in self.smokes:
-            smoke.draw(screen)
+            self.draw_smoke(smoke, screen, engine)
+
+    def make_sprite(self, particle: Particle, engine) -> object:
+        """
+        A method to make a sprite.
+
+        Args:
+        - particle (Particle): The particle to create a sprite for.
+        - engine: The engine instance to handle rendering.
+
+        Returns:
+        - The sprite object (Pygame Surface or PIL Image).
+        """
+        sprite = Sprite(
+            color=particle.color,
+            width=particle.scale,
+            height=particle.scale,
+        )
+        if engine.engine_type == EngineTypes.PYGAME:
+            sprite_paint = engine.paint_sprite(sprite)
+        elif engine.engine_type == EngineTypes.PIL:
+            sprite_paint = engine.paint_sprite(sprite)
+        return sprite_paint
+
+    def draw_particle(self, particle: Particle, screen, engine: Engine):
+        """
+        A method to draw a particle.
+
+        Args:
+        - particle (Particle): The particle to draw.
+        - screen: The screen to draw the particle on.
+        - engine: The engine instance to handle rendering.
+        """
+        if particle.is_alive:
+            if particle.sprite_paint is None:
+                particle.sprite_paint = self.make_sprite(particle, engine)
+            if particle.sprite_paint is None:
+                raise ValueError(
+                    "sprite_paint is None. Ensure make_sprite is working correctly."
+                )
+            if engine.engine_type == EngineTypes.PYGAME:
+                particle.sprite_paint.set_alpha(particle.alpha)
+            engine.blit(
+                screen, particle.sprite_paint, (int(particle.x), int(particle.y))
+            )
+
+            # Mark particle as not alive if it goes out of bounds
+            if (
+                particle.x < 0
+                or particle.x > engine.screen_dim[0]
+                or particle.y < 0
+                or particle.y > engine.screen_dim[1]
+            ):
+                particle.is_alive = False
+
+    def draw_smoke(self, smoke: Smoke, screen, engine: Engine):
+        """
+        A method to draw a smoke.
+
+        Args:
+        - smoke (Smoke): The smoke to draw.
+        - screen: The screen to draw the smoke on.
+        """
+        for particle in smoke.particles:
+            if particle.sprite_paint is None:
+                if self.default_sprite is None:
+                    particle.sprite_paint = self.make_sprite(particle, engine)
+                particle.sprite_paint = self.default_sprite
+            self.draw_particle(particle, screen, engine)

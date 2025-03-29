@@ -1,72 +1,5 @@
-from smokesim.base import BaseSim, BaseProperty
-from smokesim.constants import CLOUD_MASK
-
-import pygame
-import cv2
-import numpy as np
-from typing import Optional, Tuple
-
-
-class Sprite(BaseProperty):
-    """
-    A dataclass to represent a sprite.
-    """
-
-    width: int = 20
-    height: int = 20
-    opacity_mask: np.ndarray = CLOUD_MASK
-    color: tuple = (255, 255, 255)
-
-    class Config:
-        arbitrary_types_allowed = True
-
-
-class ParticleProperty(BaseProperty):
-    """
-    A dataclass to represent the arguments for a particle.
-
-
-    - vx (Optional[float], optional): The x velocity of the particle. Defaults to None.
-    - startvy (Optional[float], optional): The y velocity of the particle. Defaults to None.
-    - scale (Optional[float], optional): The scale of the particle. Defaults to None.
-    - lifetime (Optional[int], optional): The lifetime of the particle. Defaults to None.
-    - age (int, optional): The age of the particle. Defaults to 0.
-    - min_vx (float, optional): The minimum x velocity of the particle. Defaults to -4/100.
-    - max_vx (float, optional): The maximum x velocity of the particle. Defaults to 4/100.
-    - min_vy (float, optional): The minimum y velocity of the particle. Defaults to -4/10.
-    - max_vy (float, optional): The maximum y velocity of the particle. Defaults to -1/10.
-    - min_scale (int, optional): The minimum scale of the particle. Defaults to 20.
-    - max_scale (int, optional): The maximum scale of the particle. Defaults to 40.
-    - min_lifetime (float, optional): The minimum lifetime of the particle. Defaults to 2000.
-    - max_lifetime (float, optional): The maximum lifetime of the particle. Defaults to 8000.
-    - color (Tuple[float, float, float], optional): The color of the particle. Defaults to (167, 167, 167).
-    - smoke_sprite_size (int, optional): The size of the sprite. Defaults to 20.
-    - fade_speed (int, optional): The speed at which the particle fades. Defaults to 1.
-    - alpha (int, optional): The alpha of the particle. Defaults to 255.
-    """
-
-    startvx: Optional[float] = None
-    startvy: Optional[float] = None
-    scale: Optional[float] = None
-    lifetime: Optional[int] = None
-    age: int = 0
-    min_vx: float = -4 / 100
-    max_vx: float = 4 / 100
-    min_vy: float = -4 / 10
-    max_vy: float = -1 / 10
-    # select random scale between min_scale and max_scale
-    min_scale: int = 20
-    max_scale: int = 40
-    # select a final scale between 0.1 and 1.5 times the initial scale
-    scale_range: Tuple[int, int] = (0.01, 1.5)
-    min_lifetime: float = 2000
-    max_lifetime: float = 8000
-    color: Tuple[float, float, float] = (24, 46, 48)
-    smoke_sprite_size: int = 20
-    fade_speed: int = 1
-    alpha: int = 255
-    # seed:int = 100
-    id: str = ""
+from smokesim.base import BaseSim
+from smokesim.defs.particle import ParticleProperty
 
 
 class Particle(BaseSim):
@@ -135,54 +68,11 @@ class Particle(BaseSim):
         self.alpha = property.alpha
         self.fade_speed = property.fade_speed
         self.is_alive = True
-        self.sprite_paint = self.make_sprite()
+        self.sprite_paint: ["pygame.Surface"] = None
 
     @property
     def position(self):
         return (self.x, self.y)
-
-    def paint_sprite(self, sprite: Sprite) -> pygame.Surface:
-        """
-        A method to paint a sprite.
-
-        Args:
-        - sprite (Sprite): The sprite to paint.
-
-        Returns:
-        - pygame.Surface: The painted sprite.
-        """
-        surface = pygame.Surface((sprite.width, sprite.height), pygame.SRCALPHA)
-        pixels = pygame.PixelArray(surface)
-        opacities = cv2.resize(
-            sprite.opacity_mask,
-            (sprite.width, sprite.height),
-            interpolation=cv2.INTER_NEAREST,
-        )
-        for x in range(sprite.width):
-            for y in range(sprite.height):
-                pixels[x, y] = (*sprite.color, opacities[x, y])
-        del pixels
-        # surface = pygame.transform.smoothscale(
-        #     surface, (sprite.width // 2, sprite.height // 2)
-        # )
-        surface = pygame.transform.smoothscale(surface, (sprite.width, sprite.height))
-        self.surface = surface
-        return surface
-
-    def make_sprite(self) -> pygame.Surface:
-        """
-        A method to make a sprite.
-
-        Returns:
-        - pygame.Surface: The sprite.
-        """
-        self.sprite = Sprite(
-            color=self.color,
-            width=self.scale,
-            height=self.scale,
-        )
-        self.sprite_paint = self.paint_sprite(self.sprite)
-        return self.sprite_paint
 
     def update(self, time_step: float = 1):
         """
@@ -214,41 +104,3 @@ class Particle(BaseSim):
         ):
             self.is_alive = False
             return None
-        # if self.scale > :
-        # self.sprite.width = int(self.smoke_sprite_size * self.scale)
-        # self.sprite.height = int(self.smoke_sprite_size * self.scale)
-        # if self.sprite.width < 1 or self.sprite.height < 1:
-        #     self.is_alive = False
-
-        # surface = pygame.transform.smoothscale(
-        #     self.surface, (self.sprite.width // 2, self.sprite.height // 2)
-        # )
-        surface = pygame.transform.smoothscale(self.surface, (height, width))
-        self.sprite_paint = surface
-
-    def draw(self, screen):
-        """
-        A method to draw the particle.
-
-        Args:
-        - screen (pygame.Surface): The screen to draw the particle on.
-        """
-        if self.is_alive:
-            self.sprite_paint.set_alpha(self.alpha)
-            screen.blit(self.sprite_paint, (int(self.x), int(self.y)))
-
-        if (
-            self.x < 0
-            or self.y < 0
-            or self.x > screen.get_width()
-            or self.y > screen.get_height()
-        ):
-            self.is_alive = False
-
-    def __del__(self):
-        try:
-            del self.sprite_paint
-            del self.sprite
-            del self.surface
-        except AttributeError:
-            pass

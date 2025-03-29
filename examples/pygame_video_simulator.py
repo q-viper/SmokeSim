@@ -1,6 +1,8 @@
+from smokesim.renderer import SmokeMachine, ParticleProperty
+from smokesim.engine import Engine
+
 import pygame_gui
 import pygame
-from smokesim.smoke import SmokeMachine, ParticleProperty
 from pathlib import Path
 import cv2
 import numpy as np
@@ -311,6 +313,7 @@ def main():
     smoke_machine.add_smoke(
         dict(particle_count=5, sprite_size=50, origin=(WIDTH // 2, HEIGHT))
     )
+    engine = Engine()
     particle_args = {}
     prev_mouse_pos = None
     steps = 0
@@ -512,6 +515,7 @@ def main():
             print(f"Num particles: {len(s.particles)}")
 
         smoke_machine.update(clock.tick(60))
+        smoke_machine.draw(screen, engine)
 
         # Draw UI elements
         manager.draw_ui(screen)

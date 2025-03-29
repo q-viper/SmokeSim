@@ -1,6 +1,8 @@
+from smokesim.renderer import SmokeMachine
+from smokesim.engine import Engine
+
 import pygame_gui
 import pygame
-from smokesim.smoke import SmokeMachine
 from pathlib import Path
 
 
@@ -231,11 +233,12 @@ def main():
 
     # Initialize SmokeMachine
     smoke_machine = SmokeMachine(
-        screen, default_color=color, default_particle_count=5, default_sprite_size=25
+        default_color=color, default_particle_count=5, default_sprite_size=25
     )
     smoke_machine.add_smoke(
         dict(particle_count=5, sprite_size=50, origin=(WIDTH // 2, HEIGHT))
     )
+    engine = Engine()
     particle_args = {}
     prev_mouse_pos = None
     steps = 0
@@ -345,6 +348,7 @@ def main():
             manager.process_events(event)
 
         manager.update(time_delta=clock.tick(60) / 1000.0)
+
         mouse_pos = pygame.mouse.get_pos()
         if mouse_pos != prev_mouse_pos:
             if mouse_pos[1] > container_wh[1] and mouse_pos[0] < WIDTH:
@@ -376,6 +380,7 @@ def main():
             print(f"Num particles: {len(s.particles)}")
 
         smoke_machine.update(clock.tick(60))
+        smoke_machine.draw(screen, engine=engine)
 
         # Draw UI elements
         manager.draw_ui(screen)
