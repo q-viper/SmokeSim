@@ -3,7 +3,7 @@ from setuptools import setup
 # setup for gradls
 setup(
     name="smokesim",
-    version="0.0.21",
+    version="0.0.22",
     packages=["smokesim"],
     install_requires=[
         "numpy",
