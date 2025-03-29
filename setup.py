@@ -13,6 +13,7 @@ setup(
         "black==24.4.2",
         "pydantic==2.7.1",
         "opencv-python<4.10.0",
+        "pillow",
     ],
     author="Ramkrishna Acharya(QViper)",
     author_email="qramkrishna@gmail.com",
