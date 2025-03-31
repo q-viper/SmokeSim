@@ -1,9 +1,8 @@
 name: Publish to PyPI
-
 on:
   push:
-    branches:
-      - "**"
+    tags:
+      - "*"
   pull_request:
     branches:
       - "**"

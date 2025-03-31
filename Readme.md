@@ -7,6 +7,11 @@
 ![Code Formatting](https://github.com/q-viper/SmokeSim/actions/workflows/black-formatter.yml/badge.svg)
 [![Coverage Status](https://coveralls.io/repos/github/q-viper/SmokeSim/badge.svg?branch=master)](https://coveralls.io/github/q-viper/SmokeSim?branch=master)
 
+<div align="center">
+    <img src="assets/demo.gif" alt="Smoke Simulation Demo">
+</div>
+
+*“Simulating smoke, one particle at a time.”*
 
 This project showcases my experiments in simulating smoke effects using both **JavaScript** and **Python**. The project utilizes and extends two open-source libraries to demonstrate smoke generation in various contexts, including interactive demos, image augmentation, and video processing. For playground, please visit [here](https://q-viper.github.io/SmokeSim/js_demo/).
 
