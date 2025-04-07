@@ -142,7 +142,7 @@ class PerlinNoise:
         if lacunarity is not None:
             self.lacunarity = self._resolve_param(lacunarity)
         if falloff is not None:
-            self.falloff = self._resolve_param(falloff) 
+            self.falloff = self._resolve_param(falloff)
 
         print(
             f"Generating cloud mask with scale: {scale}, octaves: {self.octaves}, persistence: {self.persistence}, lacunarity: {self.lacunarity}, falloff: {self.falloff}"

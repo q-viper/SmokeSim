@@ -8,6 +8,7 @@ from smokesim.defs.constants import CLOUD_MASK
 from typing import Tuple, List, Optional
 import numpy as np
 
+
 class Smoke(BaseSim):
     def __init__(self, smoke_property: SmokeProperty):
         """
@@ -31,12 +32,12 @@ class Smoke(BaseSim):
 
         if smoke_property.use_perlin_rate < self.random_state.random():
             self.noise = PerlinNoise(
-                seed=self.random_state.randint(0, 100)*self.id,
+                seed=self.random_state.randint(0, 100) * self.id,
                 octaves=(1, 8),
                 persistence=(0.2, 5.8),
                 lacunarity=(0.5, 10.0),
             )
-            self.default_particle_mask = self.noise.generate_cloud_mask(    
+            self.default_particle_mask = self.noise.generate_cloud_mask(
                 width=self.sprite_size,
                 height=self.sprite_size,
                 scale=self.sprite_size,
@@ -92,8 +93,6 @@ class Smoke(BaseSim):
             self.particles = []
         else:
             self.create_particles(self.particle_property)
-    
-
 
 
 class SmokeMachine:

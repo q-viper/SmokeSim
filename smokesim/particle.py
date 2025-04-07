@@ -71,7 +71,7 @@ class Particle(BaseSim):
         self.alpha = property.alpha
         self.fade_speed = property.fade_speed
         self.is_alive = True
-        self.default_particle_mask:"np.ndarray" = None
+        self.default_particle_mask: "np.ndarray" = None
         self.sprite_paint: "pygame.Surface" = None
 
     @property
