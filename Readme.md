@@ -122,6 +122,7 @@ if __name__ == "__main__":
     WIDTH, HEIGHT = 700, 500
     augmentation = Augmentation(image_path=None, screen_dim=(WIDTH, HEIGHT))
     smoke_machine = augmentation.smoke_machine
+    random_state = np.random.RandomState(100)
 
     # adding 2 smoke machines
     smoke_properties = SmokeProperty(
@@ -136,7 +137,7 @@ if __name__ == "__main__":
         origin=(450, 500),
     )
     augmentation.add_smoke(smoke_properties)
-    augmentation.augment(steps=90,history_path=Path('media/smoke_history.mp4'))
+    augmentation.augment(steps=90, history_path=Path("media/smoke_history.mp4"))
 
     # add 5 smoke machines in random position
     for i in range(5):
@@ -163,9 +164,8 @@ if __name__ == "__main__":
             smoke_property=smoke_properties,
         )
     augmentation.augment(steps=1)
-    augmentation.save_as('assets/augmented_smoke_image.jpg')
+    augmentation.save_as(Path("assets/augmented_smoke_image.jpg"))
     augmentation.end()
-
 ```
 
 * A better example is at [`examples/image_augmentation.py`](examples/image_augmentation.py). 
