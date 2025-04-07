@@ -1,15 +1,14 @@
-from setuptools import setup
+import setuptools
 
-setup(
+setuptools.setup(
     name="smokesim",
-    packages=["smokesim"],
+    packages=setuptools.find_packages(),
     use_scm_version=True,
     setup_requires=["setuptools>=42", "setuptools_scm"],
     install_requires=[
         "numpy",
         "pygame==2.5.2",
         "pygame_gui==0.6.9",
-        # "mediapipe==0.10.14",
         "black==24.4.2",
         "pydantic==2.7.1",
         "opencv-python<4.10.0",
