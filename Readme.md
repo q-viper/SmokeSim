@@ -6,7 +6,7 @@
 ![Tests](https://github.com/q-viper/SmokeSim/actions/workflows/test-on-push.yml/badge.svg)
 ![Code Formatting](https://github.com/q-viper/SmokeSim/actions/workflows/black-formatter.yml/badge.svg)
 [![Coverage Status](https://coveralls.io/repos/github/q-viper/SmokeSim/badge.svg?branch=master)](https://coveralls.io/github/q-viper/SmokeSim?branch=master)
-[![PyPI version](https://img.shields.io/pypi/v/smokesim.svg)](https://pypi.org/smokesim/)
+[![PyPI version](https://img.shields.io/pypi/v/smokesim.svg)](https://pypi.org/project/smokesim/)
 
 
 <div align="center">
