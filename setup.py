@@ -1,10 +1,11 @@
 from setuptools import setup
 
-# setup for gradls
 setup(
     name="smokesim",
     version="0.0.23",
     packages=["smokesim"],
+    use_scm_version=True,
+    setup_requires=["setuptools>=42", "setuptools_scm"],
     install_requires=[
         "numpy",
         "pygame==2.5.2",
@@ -18,8 +19,6 @@ setup(
     author="Ramkrishna Acharya(QViper)",
     author_email="qramkrishna@gmail.com",
     description="A package for doing smoke simulation.",
-    long_description=open("Readme.md").read(),
-    long_description_content_type="text/markdown",
     url="https://github.com/q-viper/SmokeSim",
     keywords=["smoke", "simulation"],
     classifiers=[
@@ -32,6 +31,5 @@ setup(
         "Intended Audience :: Developers",
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
-    download_url="https://github.com/q-viper/SmokeSim/archive/refs/tags/v0.0.2.tar.gz",
     homepage="https://q-viper.github.io/SmokeSim/",
 )
