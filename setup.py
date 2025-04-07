@@ -2,7 +2,6 @@ from setuptools import setup
 
 setup(
     name="smokesim",
-    version="0.0.23",
     packages=["smokesim"],
     use_scm_version=True,
     setup_requires=["setuptools>=42", "setuptools_scm"],
