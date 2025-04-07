@@ -1,5 +1,5 @@
 from smokesim.base import BaseProperty
-from smokesim.constants import CLOUD_MASK
+from smokesim.defs.constants import CLOUD_MASK
 
 import numpy as np
 from typing import Optional, Tuple

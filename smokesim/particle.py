@@ -1,6 +1,9 @@
 from smokesim.base import BaseSim
 from smokesim.defs.particle import ParticleProperty
 
+from typing import Union, Tuple, Optional, Callable
+import numpy as np
+
 
 class Particle(BaseSim):
     def __init__(self, x: int, y: int, property: ParticleProperty):
@@ -68,7 +71,8 @@ class Particle(BaseSim):
         self.alpha = property.alpha
         self.fade_speed = property.fade_speed
         self.is_alive = True
-        self.sprite_paint: ["pygame.Surface"] = None
+        self.default_particle_mask:"np.ndarray" = None
+        self.sprite_paint: "pygame.Surface" = None
 
     @property
     def position(self):

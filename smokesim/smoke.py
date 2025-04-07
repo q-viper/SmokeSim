@@ -1,10 +1,12 @@
-from typing import Tuple, List, Optional
-
 from smokesim.particle import Particle
 from smokesim.defs import Sprite, ParticleProperty, SmokeProperty
 from smokesim.base import BaseSim
 from smokesim.engine import EngineTypes, Engine
+from smokesim.noise import PerlinNoise
+from smokesim.defs.constants import CLOUD_MASK
 
+from typing import Tuple, List, Optional
+import numpy as np
 
 class Smoke(BaseSim):
     def __init__(self, smoke_property: SmokeProperty):
@@ -26,6 +28,21 @@ class Smoke(BaseSim):
         self.particles: List[Particle] = []
         self.particles_until_now = 0
         self.particle_property = smoke_property.particle_property
+
+        if smoke_property.use_perlin_rate < self.random_state.random():
+            self.noise = PerlinNoise(
+                seed=self.random_state.randint(0, 100)*self.id,
+                octaves=(1, 8),
+                persistence=(0.2, 5.8),
+                lacunarity=(0.5, 10.0),
+            )
+            self.default_particle_mask = self.noise.generate_cloud_mask(    
+                width=self.sprite_size,
+                height=self.sprite_size,
+                scale=self.sprite_size,
+            )
+        else:
+            self.default_particle_mask = CLOUD_MASK
         self.create_particles(self.particle_property)
 
     def create_particles(self, particle_property: Optional[ParticleProperty] = None):
@@ -75,6 +92,8 @@ class Smoke(BaseSim):
             self.particles = []
         else:
             self.create_particles(self.particle_property)
+    
+
 
 
 class SmokeMachine:
@@ -95,6 +114,7 @@ class SmokeMachine:
         self.smokes: List[Smoke] = []
         self.last_smoke_id = -1
         self.random_seed = random_seed
+        self.random_state = np.random.RandomState(random_seed)
         self.verbose = versbose
         self.default_sprite = None
         self.default_smoke_property = SmokeProperty()
@@ -191,7 +211,9 @@ class SmokeMachine:
             color=particle.color,
             width=particle.scale,
             height=particle.scale,
+            mask=particle.default_particle_mask,
         )
+
         if engine.engine_type == EngineTypes.PYGAME:
             sprite_paint = engine.paint_sprite(sprite)
         elif engine.engine_type == EngineTypes.PIL:
@@ -239,7 +261,9 @@ class SmokeMachine:
         """
         for particle in smoke.particles:
             if particle.sprite_paint is None:
+                particle.default_particle_mask = smoke.default_particle_mask
                 if self.default_sprite is None:
                     particle.sprite_paint = self.make_sprite(particle, engine)
-                particle.sprite_paint = self.default_sprite
+                else:
+                    particle.sprite_paint = self.default_sprite
             self.draw_particle(particle, screen, engine)

@@ -26,3 +26,4 @@ class SmokeProperty(BaseProperty):
     lifetime: int = -1
     age: int = 0
     id: int = 0
+    use_perlin_rate: float = 0.5

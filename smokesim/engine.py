@@ -96,34 +96,41 @@ class Engine(BaseEngine):
     def read_image(self, image_path: Optional[Path] = None):
         if self.engine_type == EngineTypes.PYGAME:
             if image_path is not None and image_path.exists():
-                self.image = self.engine.image.load(str(image_path))
+                try:
+                    self.image = self.engine.image.load(str(image_path))
+                except Exception as e:
+                    raise RuntimeError(f"Failed to load image: {e}")
             else:
-                # Create a blank image if the path is invalid or not provided
-                self.image = np.zeros(
+                # Create a blank image with valid dimensions
+                blank_array = np.zeros(
                     (self.screen_dim[1], self.screen_dim[0], 3), dtype=np.uint8
                 )
-                self.image = self.engine.surfarray.make_surface(self.image)
+                self.image = self.engine.surfarray.make_surface(blank_array)
 
-            self.image.set_alpha(255)
+            if hasattr(self.image, "set_alpha"):
+                self.image.set_alpha(255)
             self.image = self.engine.transform.scale(self.image, self.screen_dim)
+
             blank_image = self.engine.surfarray.make_surface(
                 np.zeros((self.screen_dim[1], self.screen_dim[0], 3), dtype=np.uint8)
             )
-            blank_image.set_alpha(255)
+            if hasattr(blank_image, "set_alpha"):
+                blank_image.set_alpha(255)
             self.blank_image = self.engine.transform.scale(blank_image, self.screen_dim)
 
         elif self.engine_type == EngineTypes.PIL:
             if image_path is not None and image_path.exists():
-                self.image = self.engine.open(image_path)
+                try:
+                    self.image = self.engine.open(image_path)
+                except Exception as e:
+                    raise RuntimeError(f"Failed to open image: {e}")
             else:
-                # Create a blank image if the path is invalid or not provided
-                self.image = np.zeros(
+                blank_array = np.zeros(
                     (self.screen_dim[1], self.screen_dim[0], 3), dtype=np.uint8
                 )
-                self.image = self.engine.fromarray(self.image)
+                self.image = self.engine.fromarray(blank_array)
             self.image = self.image.resize(self.screen_dim)
-            blank_image = self.engine.new("RGBA", self.screen_dim, (0, 0, 0, 0))
-            self.blank_image = blank_image
+            self.blank_image = self.engine.new("RGBA", self.screen_dim, (0, 0, 0, 0))
 
     def paint_sprite(self, sprite):
         """
