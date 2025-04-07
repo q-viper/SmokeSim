@@ -151,7 +151,7 @@ class Augmentation:
 
             # Save the mask to the video writer if enabled
             if self.writer:
-                self.writer.write(rgb_mask_array)
+                self.writer.write(cv2.cvtColor(rgb_mask_array, cv2.COLOR_RGB2BGR))
 
             # Yield the augmented image and mask
             yield rgb_array, rgb_mask_array
