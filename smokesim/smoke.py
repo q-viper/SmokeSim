@@ -29,8 +29,9 @@ class Smoke(BaseSim):
         self.particles: List[Particle] = []
         self.particles_until_now = 0
         self.particle_property = smoke_property.particle_property
+        smoke_property.use_perlin_rate = min(max(smoke_property.use_perlin_rate, 0), 1)
 
-        if smoke_property.use_perlin_rate < self.random_state.random():
+        if smoke_property.use_perlin_rate > self.random_state.random():
             self.noise = PerlinNoise(
                 seed=self.random_state.randint(0, 100) * self.id,
                 octaves=(1, 8),
