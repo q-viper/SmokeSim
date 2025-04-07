@@ -1,6 +1,7 @@
 import cv2
 import mediapipe as mp
 from smokesim.augmentation import Augmentation
+from smokesim.defs import SmokeProperty, ParticleProperty
 import numpy as np
 from pathlib import Path
 
@@ -63,30 +64,31 @@ if __name__ == "__main__":
                         cv2.circle(screen_frame, (x, y), 10, (0, 255, 0), -1)
 
                 if fno % MAKE_SMOKE_EVERY == 0:
-                    augmentation.add_smoke(
-                        dict(
+                    smoke_property = SmokeProperty(
+                        color=augmentation.smoke_machine.color,
+                        lifetime=5000,
+                        particle_count=5,
+                        origin=(
+                            (
+                                np.random.randint(100, WIDTH),
+                                np.random.randint(100, HEIGHT),
+                            )
+                            if (x, y) == (None, None)
+                            else (y, x)
+                        ),
+                        particle_property=ParticleProperty(
+                            min_lifetime=500,
+                            max_lifetime=1000,
+                            min_scale=10,
+                            max_scale=50,
+                            fade_speed=1,
+                            scale=25,
+                            smoke_sprite_size=25,
                             color=augmentation.smoke_machine.color,
-                            particle_count=5,
-                            origin=(
-                                (
-                                    np.random.randint(100, WIDTH),
-                                    np.random.randint(100, HEIGHT),
-                                )
-                                if (x, y) == (None, None)
-                                else (y, x)
-                            ),
-                            lifetime=5000,
-                            particle_args={
-                                "min_lifetime": 500,
-                                "max_lifetime": 1000,
-                                "min_scale": 10,
-                                "max_scale": 50,
-                                "fade_speed": 1,
-                                "scale": 25,
-                                "smoke_sprite_size": 25,
-                                "color": augmentation.smoke_machine.color,
-                            },
-                        )
+                        ),
+                    )
+                    augmentation.add_smoke(
+                        smoke_property=smoke_property,
                     )
 
                 smoked_array, mask = augmentation.augment(steps=30, image=screen_frame)

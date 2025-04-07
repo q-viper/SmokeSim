@@ -1,8 +1,9 @@
-import logging
 from smokesim.augmentation import Augmentation
+from smokesim.defs import SmokeProperty, ParticleProperty
+
+import logging
 import numpy as np
 import pytest
-from pathlib import Path
 
 # Set up logging
 logging.basicConfig(
@@ -25,55 +26,55 @@ def setup_augmentation(
 
     # Add some smoke particles
     logging.info("Adding initial smoke particles.")
-    augmentation.add_smoke(
-        dict(
-            particle_count=15,
-            lifetime=2000,
-            sprite_size=25,
-            origin=(250, 500),
-            particle_args={
-                "min_lifetime": 200,
-                "max_lifetime": 1000,
-                "min_scale": 10,
-                "max_scale": 50,
-                "fade_speed": 2,
-                "scale": 50,
-                "smoke_sprite_size": 50,
-                "min_vx": -2,
-                "max_vx": 2,
-                "color": smoke_machine.color,
-            },
-        )
+    smoke_properties = SmokeProperty(
+        particle_count=15,
+        lifetime=2000,
+        sprite_size=25,
+        origin=(250, 500),
+        particle_property=ParticleProperty(
+            min_lifetime=200,
+            max_lifetime=1000,
+            min_scale=10,
+            max_scale=50,
+            fade_speed=2,
+            scale=50,
+            smoke_sprite_size=50,
+            min_vx=-2,
+            max_vx=2,
+            color=smoke_machine.color,
+        ),
     )
+    augmentation.add_smoke(smoke_properties)
     augmentation.add_smoke(
-        dict(particle_count=15, lifetime=2000, sprite_size=25, origin=(450, 500))
+        smoke_property=SmokeProperty(
+            particle_count=15, lifetime=2000, sprite_size=25, origin=(450, 500)
+        )
     )
 
     # Add random smoke particles
     for _ in range(5):
-        augmentation.add_smoke(
-            dict(
+        smoke_properties = SmokeProperty(
+            color=smoke_machine.color,
+            particle_count=10,
+            origin=(
+                random_state.randint(100, width),
+                random_state.randint(100, height),
+            ),
+            lifetime=2000,
+            particle_property=ParticleProperty(
+                min_lifetime=200,
+                max_lifetime=1000,
+                min_scale=10,
+                max_scale=50,
+                fade_speed=2,
+                scale=50,
+                smoke_sprite_size=50,
                 color=smoke_machine.color,
-                particle_count=10,
-                origin=(
-                    random_state.randint(100, width),
-                    random_state.randint(100, height),
-                ),
-                lifetime=2000,
-                particle_args={
-                    "min_lifetime": 200,
-                    "max_lifetime": 1000,
-                    "min_scale": 10,
-                    "max_scale": 50,
-                    "fade_speed": 2,
-                    "scale": 50,
-                    "smoke_sprite_size": 50,
-                    "min_vx": -2,
-                    "max_vx": 2,
-                    "color": smoke_machine.color,
-                },
-            )
+                min_vx=-2,
+                max_vx=2,
+            ),
         )
+        augmentation.add_smoke(smoke_property=smoke_properties)
 
     logging.info("Augmentation setup complete.")
     return augmentation

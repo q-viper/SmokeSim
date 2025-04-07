@@ -1,5 +1,6 @@
-from smokesim.renderer import SmokeMachine
+from smokesim.smoke import SmokeMachine
 from smokesim.engine import Engine
+from smokesim.defs import ParticleProperty, SmokeProperty
 
 import pygame_gui
 import pygame
@@ -12,8 +13,10 @@ def main():
     project_path = Path(__file__).resolve().parent
     img_path = project_path / Path("assets/me.jpg")
     if img_path.exists():
+        print(f"Image found at {img_path}")
         bg = pygame.image.load(str(img_path))
     else:
+        print(f"Image not found at {img_path}, using default background color.")
         bg = pygame.Surface((700, 500))
         bg.fill((0, 0, 0))
     WIDTH, HEIGHT = 700, 500
@@ -235,11 +238,17 @@ def main():
     smoke_machine = SmokeMachine(
         default_color=color, default_particle_count=5, default_sprite_size=25
     )
-    smoke_machine.add_smoke(
-        dict(particle_count=5, sprite_size=50, origin=(WIDTH // 2, HEIGHT))
+    smoke_property = SmokeProperty(
+        origin=(WIDTH // 2, HEIGHT // 2),
+        particle_count=5,
+        sprite_size=50,
     )
-    engine = Engine()
-    particle_args = {}
+    smoke_machine.add_smoke(
+        smoke_property=smoke_property,
+    )
+    engine = Engine(screen_dim=(WIDTH, HEIGHT), engine_type="pygame")
+
+    particle_property = ParticleProperty()
     prev_mouse_pos = None
     steps = 0
     while running:
@@ -252,27 +261,30 @@ def main():
                 if event.button == 1:  # Left mouse button
                     print("Left mouse button clicked at:", event.pos)
                     if event.pos[1] > container_wh[1]:
+                        smoke_property = SmokeProperty(
+                            color=smoke_machine.color,
+                            particle_count=smoke_machine.particle_count,
+                            sprite_size=smoke_machine.sprite_size,
+                            origin=event.pos,
+                            particle_property=particle_property,
+                        )
+
                         smoke_machine.add_smoke(
-                            dict(
-                                color=smoke_machine.color,
-                                particle_count=smoke_machine.particle_count,
-                                sprite_size=smoke_machine.sprite_size,
-                                origin=event.pos,
-                                particle_args=particle_args,
-                            )
+                            smoke_property=smoke_property,
                         )
 
                 elif event.button == 3:  # Right mouse button
                     if event.pos[1] > container_wh[1]:
                         smoke_machine.smokes = []
+                        smoke_property = SmokeProperty(
+                            color=smoke_machine.color,
+                            particle_count=smoke_machine.particle_count,
+                            sprite_size=smoke_machine.sprite_size,
+                            origin=event.pos,
+                            particle_property=particle_property,
+                        )
                         smoke_machine.add_smoke(
-                            dict(
-                                color=smoke_machine.color,
-                                particle_count=smoke_machine.particle_count,
-                                sprite_size=smoke_machine.sprite_size,
-                                origin=event.pos,
-                                particle_args=particle_args,
-                            )
+                            smoke_property=smoke_property,
                         )
                     print("Right mouse button clicked at:", event.pos)
             elif event.type == pygame_gui.UI_BUTTON_PRESSED:
@@ -291,20 +303,20 @@ def main():
                     int(green_color_slider.get_current_value()),
                     int(blue_color_slider.get_current_value()),
                 )
+                particle_property = ParticleProperty(
+                    color=smoke_machine.color,
+                    min_vx=min_vx_slider.get_current_value(),
+                    max_vx=max_vx_slider.get_current_value(),
+                    min_vy=min_vy_slider.get_current_value(),
+                    max_vy=max_vy_slider.get_current_value(),
+                    min_scale=min_scale_slider.get_current_value(),
+                    max_scale=max_scale_slider.get_current_value(),
+                    min_lifetime=min_life_slider.get_current_value(),
+                    max_lifetime=max_life_slider.get_current_value(),
+                    smoke_sprite_size=sprite_size_slider.get_current_value(),
+                    fade_speed=fade_speed.get_current_value(),
+                )
 
-                particle_args = {
-                    "color": smoke_machine.color,
-                    "min_vx": min_vx_slider.get_current_value(),
-                    "max_vx": max_vx_slider.get_current_value(),
-                    "min_vy": min_vy_slider.get_current_value(),
-                    "max_vy": max_vy_slider.get_current_value(),
-                    "min_scale": min_scale_slider.get_current_value(),
-                    "max_scale": max_scale_slider.get_current_value(),
-                    "min_lifetime": min_life_slider.get_current_value(),
-                    "max_lifetime": max_life_slider.get_current_value(),
-                    "smoke_sprite_size": sprite_size_slider.get_current_value(),
-                    "fade_speed": fade_speed.get_current_value(),
-                }
                 smoke_machine.particle_count = max_particles_slider.get_current_value()
 
                 red_label.text = f"R: {smoke_machine.color[0]}"
@@ -317,18 +329,22 @@ def main():
                 max_particles_label.text = (
                     f"MaxParticles: {smoke_machine.particle_count}"
                 )
-                max_life_label.text = f"MaxLife: {particle_args['max_lifetime']}"
-                min_life_label.text = f"MinLife: {particle_args['min_lifetime']}"
-                fade_label.text = f"Fade: {particle_args['fade_speed']}"
+                max_life_label.text = f"MaxLife: {max_life_slider.get_current_value()}"
+                min_life_label.text = f"MinLife: {min_life_slider.get_current_value()}"
+                fade_label.text = f"Fade: {fade_speed.get_current_value()}"
                 sprite_size_label.text = (
-                    f"SpriteSize: {particle_args['smoke_sprite_size']}"
+                    f"SpriteSize: {sprite_size_slider.get_current_value()}"
                 )
-                min_vx_label.text = f"MinVx: {particle_args['min_vx']}"
-                max_vx_label.text = f"MaxVx: {particle_args['max_vx']}"
-                min_vy_label.text = f"MinVy: {particle_args['min_vy']}"
-                max_vy_label.text = f"MaxVy: {particle_args['max_vy']}"
-                min_scale_label.text = f"MinScale: {particle_args['min_scale']}"
-                max_scale_label.text = f"MaxScale: {particle_args['max_scale']}"
+                min_vx_label.text = f"MinVx: {min_vx_slider.get_current_value()}"
+                max_vx_label.text = f"MaxVx: {max_vx_slider.get_current_value()}"
+                min_vy_label.text = f"MinVy: {min_vy_slider.get_current_value()}"
+                max_vy_label.text = f"MaxVy: {max_vy_slider.get_current_value()}"
+                min_scale_label.text = (
+                    f"MinScale: {min_scale_slider.get_current_value()}"
+                )
+                max_scale_label.text = (
+                    f"MaxScale: {max_scale_slider.get_current_value()}"
+                )
 
                 red_label.rebuild()
                 green_label.rebuild()
@@ -353,31 +369,33 @@ def main():
         if mouse_pos != prev_mouse_pos:
             if mouse_pos[1] > container_wh[1] and mouse_pos[0] < WIDTH:
                 print("Mouse position:", mouse_pos)
-                smoke_machine.add_smoke(
-                    dict(
+                smoke_property = SmokeProperty(
+                    color=smoke_machine.color,
+                    particle_count=1,
+                    origin=mouse_pos,
+                    lifetime=200,
+                    particle_property=ParticleProperty(
+                        min_lifetime=200,
+                        max_lifetime=500,
+                        min_scale=10,
+                        max_scale=50,
+                        fade_speed=50,
+                        scale=50,
+                        smoke_sprite_size=50,
                         color=smoke_machine.color,
-                        particle_count=1,
-                        origin=mouse_pos,
-                        lifetime=200,
-                        particle_args={
-                            "min_lifetime": 200,
-                            "max_lifetime": 500,
-                            "min_scale": 10,
-                            "max_scale": 50,
-                            "fade_speed": 50,
-                            "scale": 50,
-                            "smoke_sprite_size": 50,
-                            "color": smoke_machine.color,
-                        },
-                    )
+                    ),
+                )
+
+                smoke_machine.add_smoke(
+                    smoke_property=smoke_property,
                 )
         prev_mouse_pos = mouse_pos
         # Clear the screen
         # screen.fill((0, 0, 0))
         screen.blit(bg, (0, 0))
-        for s in smoke_machine.smokes:
-            print(f"Smoke id: {s.id}")
-            print(f"Num particles: {len(s.particles)}")
+        # for s in smoke_machine.smokes:
+        #     print(f"Smoke id: {s.id}")
+        #     print(f"Num particles: {len(s.particles)}")
 
         smoke_machine.update(clock.tick(60))
         smoke_machine.draw(screen, engine=engine)

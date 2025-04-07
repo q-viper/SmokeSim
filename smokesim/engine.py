@@ -6,7 +6,7 @@ from PIL import Image
 import cv2
 
 
-class EngineTypes(Enum):
+class EngineTypes(str, Enum):
     PYGAME = "pygame"
     PIL = "pil"
 

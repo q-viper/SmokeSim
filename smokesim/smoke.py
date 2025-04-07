@@ -86,7 +86,6 @@ class SmokeMachine:
         default_sprite_size: int = 20,
         random_seed: int = 100,
         versbose: bool = False,
-        auto_draw: bool = True,
     ):
         self.engine_type = engine_type
         self.color = default_color
@@ -98,40 +97,36 @@ class SmokeMachine:
         self.random_seed = random_seed
         self.verbose = versbose
         self.default_sprite = None
+        self.default_smoke_property = SmokeProperty()
 
-    def add_smoke(self, args: dict):
+    def add_smoke(self, smoke_property: SmokeProperty):
         """
         A method to add smoke to the smoke machine.
 
         Args:
-        - args (dict): The arguments to pass to the Smoke class.
-            If `particle_args` is in the args, it will be passed to the ParticleProperty class.
-
+        - smoke_property: SmokeProperty, object containing the properties of the smoke.
         """
-
-        if "color" not in args:
-            args["color"] = self.color
-        if "particle_count" not in args:
-            args["particle_count"] = self.particle_count
-        if "sprite_size" not in args:
-            args["sprite_size"] = self.sprite_size
-        if "id" not in args:
-            args["id"] = self.last_smoke_id + 1
-        if "random_seed" not in args:
-            args["random_seed"] = self.random_seed
-        if "particle_args" in args:
-            particle_args = args["particle_args"]
-            if particle_args.get("random_seed") is None:
-                particle_args["random_seed"] = self.random_seed
-            particle_property = ParticleProperty(**particle_args)
-            # print(f"Particle property: {particle_property}")
-            args["particle_property"] = particle_property
-            del args["particle_args"]
-        else:
-            args["particle_property"] = ParticleProperty(random_seed=self.random_seed)
-        smoke_property = SmokeProperty(**args)
+        # if the propert are default, then use from the smoke's property
+        if self.default_smoke_property.color == smoke_property.color:
+            smoke_property.color = self.color
+        if self.default_smoke_property.sprite_size == smoke_property.sprite_size:
+            smoke_property.sprite_size = self.sprite_size
+        if self.default_smoke_property.particle_count == smoke_property.particle_count:
+            smoke_property.particle_count = self.particle_count
+        if self.default_smoke_property.id == smoke_property.id:
+            smoke_property.id = self.last_smoke_id + 1
+        if self.default_smoke_property.random_seed == smoke_property.random_seed:
+            smoke_property.random_seed = self.random_seed
+        if (
+            self.default_smoke_property.particle_property
+            == smoke_property.particle_property
+        ):
+            smoke_property.particle_property.random_seed = self.random_seed
+        if self.default_smoke_property.lifetime == smoke_property.lifetime:
+            smoke_property.lifetime = -1
         smoke = Smoke(smoke_property)
         self.smokes.append(smoke)
+
         self.last_smoke_id += 1
         if self.verbose:
             print(f"Added smoke with id: {smoke.id}, particles: {len(smoke.particles)}")

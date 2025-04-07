@@ -1,8 +1,8 @@
-import logging
 from smokesim.augmentation import Augmentation
-import numpy as np
+from smokesim.defs import SmokeProperty, ParticleProperty
+
+import logging
 import pytest
-from pathlib import Path
 
 # Set up logging
 logging.basicConfig(
@@ -19,13 +19,14 @@ def test_age():
         image_path=None, screen_dim=(WIDTH, HEIGHT), random_seed=42
     )
     augmentation.add_smoke(
-        dict(
+        smoke_property=SmokeProperty(
             particle_count=1,
             sprite_size=25,
             origin=(50, 50),
-            particle_args=dict(lifetime=20),
+            particle_property=ParticleProperty(lifetime=20),
         )
     )
+
     augmentation.augment(2, time_step=30)
     assert len(augmentation.smoke_machine.smokes) == 1
     # after 1st step there will be 2 particles and increases by 1 each step
@@ -49,11 +50,11 @@ def test_position():
         image_path=None, screen_dim=(WIDTH, HEIGHT), random_seed=42
     )
     augmentation.add_smoke(
-        dict(
+        smoke_property=SmokeProperty(
             particle_count=1,
             sprite_size=25,
             origin=(50, 50),
-            particle_args=dict(lifetime=1000, startvy=5),
+            particle_property=ParticleProperty(lifetime=1000, startvy=5),
         )
     )
     augmentation.augment(2, time_step=50)

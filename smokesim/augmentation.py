@@ -1,5 +1,6 @@
 from smokesim.smoke import SmokeMachine
 from smokesim.engine import EngineTypes, Engine
+from smokesim.defs import SmokeProperty
 
 from typing import Optional, Tuple
 from pathlib import Path
@@ -42,7 +43,7 @@ class Augmentation:
         self.smoke_machine = (
             smoke_machine
             if smoke_machine
-            else SmokeMachine(self.screen, auto_draw=False, random_seed=random_seed)
+            else SmokeMachine(self.screen, random_seed=random_seed)
         )
         self.smoke_machine.random_seed = random_seed
 
@@ -73,14 +74,14 @@ class Augmentation:
         """
         return self.engine.make_screen(self.screen_dim)
 
-    def add_smoke(self, args: dict):
+    def add_smoke(self, smoke_property: SmokeProperty):
         """
         A method to add smoke to the screen.
 
         Args:
         - args (dict): The arguments to pass to the smoke machine.
         """
-        self.smoke_machine.add_smoke(args)
+        self.smoke_machine.add_smoke(smoke_property)
 
     def augment_iter(
         self,
