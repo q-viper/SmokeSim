@@ -6,8 +6,8 @@ setuptools.setup(
     use_scm_version=True,
     setup_requires=["setuptools>=42", "setuptools_scm"],
     install_requires=[
-        "numpy",
-        "pygame==2.5.2",
+        "numpy=1.26.3",
+        "pygame==2.6.1",
         "pygame_gui==0.6.9",
         "black==24.4.2",
         "pydantic==2.7.1",
