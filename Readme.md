@@ -173,7 +173,8 @@ if __name__ == "__main__":
 * A sample can be seen at [media/smoke_history.mp4](https://q-viper.github.io/SmokeSim/media/smoke_history.mp4).
 
 ### Preview
-![](assets/augmented_smoke.png)
+![](assets/augmented_smoke_image.png)
+![](assets/augmented_smoke_immage_mask.png)
 
 
 ## Using this With Video

@@ -97,9 +97,20 @@ class Engine(BaseEngine):
         if self.engine_type == EngineTypes.PYGAME:
             if image_path is not None and image_path.exists():
                 try:
+                    # Try loading the image with pygame
                     self.image = self.engine.image.load(str(image_path))
                 except Exception as e:
-                    raise RuntimeError(f"Failed to load image: {e}")
+                    print(
+                        f"pygame failed to load image: {e}. Attempting to use Pillow."
+                    )
+                    try:
+                        # Use Pillow as a fallback
+                        pil_image = Image.open(image_path).convert("RGB")
+                        image_array = np.array(pil_image)
+                        self.image = self.engine.surfarray.make_surface(image_array)
+                        self.image = self.engine.transform.rotate(self.image, -90)
+                    except Exception as pil_e:
+                        raise RuntimeError(f"Failed to load image with Pillow: {pil_e}")
             else:
                 # Create a blank image with valid dimensions
                 blank_array = np.zeros(
