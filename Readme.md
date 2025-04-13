@@ -174,7 +174,7 @@ if __name__ == "__main__":
 
 ### Preview
 ![](assets/augmented_smoke_image.png)
-![](assets/augmented_smoke_immage_mask.png)
+![](assets/augmented_smoke_image_mask.png)
 
 
 ## Using this With Video
