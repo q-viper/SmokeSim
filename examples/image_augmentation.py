@@ -7,9 +7,9 @@ from pathlib import Path
 if __name__ == "__main__":
     WIDTH, HEIGHT = 700, 500
     project_dir = Path(__file__).resolve().parents[1]
-    augmentation = Augmentation(
-        image_path=project_dir / Path("assets/me.jpg"), screen_dim=(WIDTH, HEIGHT)
-    )
+    img_path = project_dir / Path("assets/me.jpg")
+    print(f"Image path: {img_path}")
+    augmentation = Augmentation(image_path=img_path, screen_dim=(WIDTH, HEIGHT))
     smoke_machine = augmentation.smoke_machine
     smoke_properties = SmokeProperty(
         particle_count=15,
@@ -53,12 +53,10 @@ if __name__ == "__main__":
             smoke_property=smoke_properties,
         )
     final_image1, final_mask1 = augmentation.augment(steps=1)
-    augmentation.save_as(project_dir / Path("assets/augmented_smoke_image.jpg"))
+    augmentation.save_as(project_dir / Path("assets/augmented_smoke_image.png"))
     augmentation.end()
 
-    augmentation = Augmentation(
-        image_path=project_dir / Path("assets/me.jpg"), screen_dim=(WIDTH, HEIGHT)
-    )
+    augmentation = Augmentation(image_path=img_path, screen_dim=(WIDTH, HEIGHT))
     smoke_machine = augmentation.smoke_machine
     smoke_properties = SmokeProperty(
         particle_count=15,
@@ -102,7 +100,7 @@ if __name__ == "__main__":
             smoke_property=smoke_properties,
         )
     final_image2, final_mask2 = augmentation.augment(steps=1)
-    augmentation.save_as(project_dir / Path("assets/augmented_smoke_image.jpg"))
+    augmentation.save_as(project_dir / Path("assets/augmented_smoke_image.png"))
     augmentation.end()
 
     print(f"Are equal: {np.array_equal(final_image1, final_image2)}")
