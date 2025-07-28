@@ -44,8 +44,8 @@ This project showcases my experiments in simulating smoke effects using both **J
 ## Disclaimer
 This project is an educational exploration, and I am not an expert in JavaScript. The implementation builds on the following two projects, which have been modified to suit the goals of this project:
 
-- [`pages/scripts/smoke.js`](pages/scripts/smoke.js): Adapted from [bijection/smoke.js](https://github.com/bijection/smoke.js)
-- [`pages/scripts/processor.js`](pages/scripts/processor.js): Based on [processor.js](https://github.com/mdn/dom-examples/blob/main/canvas/chroma-keying/processor.js)
+- [`js_demo/scripts/smoke.js`](js_demo/scripts/smoke.js): Adapted from [bijection/smoke.js](https://github.com/bijection/smoke.js)
+- [`js_demo/scripts/processor.js`](js_demo/scripts/processor.js): Based on [processor.js](https://github.com/mdn/dom-examples/blob/main/canvas/chroma-keying/processor.js)
 
 **Credits:** A huge thanks to the original authors for their incredible work.
 
