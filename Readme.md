@@ -206,11 +206,14 @@ if __name__ == "__main__":
 * Demo is at [media/smoke_video.mp4](https://q-viper.github.io/SmokeSim/media/smoke_video.mp4).
 
 
+## Citation
+@misc{SmokeSim2024,
+  author = {Ramkrishna Acharya},
+  title = {SmokeSim: A Simple Smoke Simulation and Augmentation Tool},
+  year = {2024},
+  howpublished = {\url{https://github.com/q-viper/SmokeSim}},
+}
 
-## To do
-* Add collision effect between particles.
-* Add wind effect.
-* Try to add smoother transition.
 
 ## Collaborating
 If you find this project to be interesting and want to add changes, please add your changes and make the push request. Or you can make an issue for that.
